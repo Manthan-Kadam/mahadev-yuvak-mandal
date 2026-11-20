@@ -1,0 +1,459 @@
+import React, { useState, useEffect } from 'react';
+import { Header } from './components/Header';
+import { StatsOverview } from './components/StatsOverview';
+import { MembersMatrix } from './components/MembersMatrix';
+import { PaymentModal } from './components/PaymentModal';
+import { AddMemberModal } from './components/AddMemberModal';
+import { WhatsAppAutomationModal } from './components/WhatsAppAutomationModal';
+import { ExpensesTracker } from './components/ExpensesTracker';
+import { MemberPassbookView } from './components/MemberPassbookView';
+import { UpiSettingsModal } from './components/UpiSettingsModal';
+import { MonthlyReminderBanner } from './components/MonthlyReminderBanner';
+import { AutoReminderQueueModal } from './components/AutoReminderQueueModal';
+import { WhatsAppBotModal } from './components/WhatsAppBotModal';
+import { 
+  loadStoredData, 
+  saveToStorage, 
+  exportToJsonFile, 
+  exportToCsv 
+} from './utils/storage';
+import { INITIAL_MEMBERS, INITIAL_EXPENSES, INITIAL_SETTINGS, DEFAULT_MONTHS } from './data/initialData';
+
+export function App() {
+  const initial = loadStoredData();
+
+  const [members, setMembers] = useState(initial.members);
+  const [expenses, setExpenses] = useState(initial.expenses);
+  const [settings, setSettings] = useState(initial.settings);
+  const [months, setMonths] = useState(initial.months);
+  const [lang, setLang] = useState(initial.lang || 'gu');
+  
+  // Default active month: 'm2' (November 2026 - current cycle month)
+  const [activeMonth, setActiveMonth] = useState('m2');
+  const [activeTab, setActiveTab] = useState('matrix'); // 'matrix', 'expenses', 'members'
+
+  // Modals state
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
+
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentModalData, setPaymentModalData] = useState({ member: null, month: null });
+
+  const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
+  const [isUpiSettingsOpen, setIsUpiSettingsOpen] = useState(false);
+  const [isAutoReminderOpen, setIsAutoReminderOpen] = useState(false);
+  const [isBotModalOpen, setIsBotModalOpen] = useState(false);
+
+  // Sync state changes to localStorage
+  useEffect(() => {
+    saveToStorage('MEMBERS', members);
+  }, [members]);
+
+  useEffect(() => {
+    saveToStorage('EXPENSES', expenses);
+  }, [expenses]);
+
+  useEffect(() => {
+    saveToStorage('SETTINGS', settings);
+  }, [settings]);
+
+  useEffect(() => {
+    saveToStorage('MONTHS', months);
+  }, [months]);
+
+  useEffect(() => {
+    saveToStorage('LANG', lang);
+  }, [lang]);
+
+  // Sync state to backend database so cron job can access it even when browser is closed
+  useEffect(() => {
+    fetch('http://localhost:3001/api/sync-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ members, settings, months, expenses, activeMonth })
+    }).catch(() => {});
+  }, [members, settings, months, expenses, activeMonth]);
+
+  const isGu = lang === 'gu';
+
+  // Compute total collections
+  let totalCollections = 0;
+  members.forEach(m => {
+    const target = m.monthlyTarget || settings.monthlyAmount || 500;
+    months.forEach(month => {
+      const p = m.payments?.[month.id];
+      if (p && p.paid) {
+        totalCollections += (p.amount || target);
+      }
+    });
+  });
+
+  // Handlers
+  const handleSaveMember = (memberData, id) => {
+    if (id) {
+      // Editing
+      setMembers(prev => prev.map(m => m.id === id ? { ...m, ...memberData } : m));
+    } else {
+      // Adding new
+      const newMember = {
+        ...memberData,
+        id: `mem_${Date.now()}`,
+        joinedDate: new Date().toISOString().split('T')[0],
+        payments: {}
+      };
+      setMembers(prev => [...prev, newMember]);
+    }
+  };
+
+  const handleBulkAddMembers = (newMembersList) => {
+    const formatted = newMembersList.map((m, idx) => ({
+      id: `mem_${Date.now()}_${idx}`,
+      name: m.name,
+      phone: m.phone || '',
+      role: m.role || (isGu ? 'સભ્ય' : 'Member'),
+      monthlyTarget: m.monthlyTarget || settings.monthlyAmount || 500,
+      joinedDate: new Date().toISOString().split('T')[0],
+      payments: {}
+    }));
+    setMembers(prev => [...prev, ...formatted]);
+  };
+
+  const handleClearMembers = () => {
+    const confirmMsg = isGu 
+      ? 'શું તમે ખરેખર હાલના તમામ સભ્યો હટાવીને તમારા મહાદેવ યુવક મંડળના નવા સભ્યો ઉમેરવા માંગો છો?' 
+      : 'Clear all members from the list?';
+    if (window.confirm(confirmMsg)) {
+      setMembers([]);
+    }
+  };
+
+  const handleDeleteMember = (id, name) => {
+    const confirmMsg = isGu 
+      ? `શું તમે ખરેખર ${name} ને સભ્યોની યાદીમાંથી કાઢી નાખવા માંગો છો?`
+      : `Are you sure you want to delete ${name}?`;
+    if (window.confirm(confirmMsg)) {
+      setMembers(prev => prev.filter(m => m.id !== id));
+    }
+  };
+
+  const handleOpenEditMember = (member) => {
+    setEditingMember(member);
+    setIsAddMemberOpen(true);
+  };
+
+  const handleOpenAddMember = () => {
+    setEditingMember(null);
+    setIsAddMemberOpen(true);
+  };
+
+  const handleOpenPaymentModal = (member, month) => {
+    setPaymentModalData({ member, month });
+    setIsPaymentOpen(true);
+  };
+
+  const handleSavePayment = (memberId, monthId, paymentData) => {
+    setMembers(prev => prev.map(m => {
+      if (m.id === memberId) {
+        return {
+          ...m,
+          payments: {
+            ...m.payments,
+            [monthId]: paymentData
+          }
+        };
+      }
+      return m;
+    }));
+  };
+
+  const handleSaveMultiMonthPayment = (memberId, monthIds, paymentData) => {
+    setMembers(prev => prev.map(m => {
+      if (m.id === memberId) {
+        const updatedPayments = { ...m.payments };
+        const count = monthIds.length || 1;
+        const totalAmt = Number(paymentData.amount) || (count * (m.monthlyTarget || settings.monthlyAmount || 300));
+        const amountPerMonth = Math.round(totalAmt / count);
+
+        monthIds.forEach(mId => {
+          updatedPayments[mId] = {
+            paid: true,
+            amount: amountPerMonth,
+            date: paymentData.date,
+            mode: paymentData.mode,
+            ref: paymentData.ref
+          };
+        });
+
+        return {
+          ...m,
+          payments: updatedPayments
+        };
+      }
+      return m;
+    }));
+  };
+
+  const handleAddExpense = (newExpense) => {
+    setExpenses(prev => [newExpense, ...prev]);
+  };
+
+  const handleDeleteExpense = (id) => {
+    const confirmMsg = isGu ? 'આ ખર્ચ કાઢી નાખવો છે?' : 'Delete this expense?';
+    if (window.confirm(confirmMsg)) {
+      setExpenses(prev => prev.filter(e => e.id !== id));
+    }
+  };
+
+  const handleSaveSettings = (newSettings, applyToAll = false) => {
+    setSettings(newSettings);
+    if (applyToAll && newSettings.monthlyAmount) {
+      setMembers(prev => prev.map(m => ({
+        ...m,
+        monthlyTarget: Number(newSettings.monthlyAmount)
+      })));
+    }
+  };
+
+  const handleUpdateMemberPhone = (memberId, newPhone) => {
+    setMembers(prev => prev.map(m => m.id === memberId ? { ...m, phone: newPhone } : m));
+  };
+
+  const handleExportBackup = () => {
+    exportToJsonFile({
+      settings,
+      members,
+      expenses,
+      months,
+      exportedAt: new Date().toISOString(),
+      version: '1.0'
+    });
+  };
+
+  const handleImportBackup = (e) => {
+    const fileReader = new FileReader();
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (parsed.members && parsed.settings) {
+            setMembers(parsed.members);
+            setExpenses(parsed.expenses || []);
+            setSettings(parsed.settings);
+            if (parsed.months) setMonths(parsed.months);
+            alert(isGu ? 'બેકઅપ સફળતાપૂર્વક લોડ થઈ ગયું છે!' : 'Backup restored successfully!');
+          } else {
+            alert(isGu ? 'અમાન્ય બેકઅપ ફાઈલ!' : 'Invalid backup file structure!');
+          }
+        } catch (err) {
+          alert(isGu ? 'ફાઈલ વાંચવામાં ભૂલ આવી!' : 'Error parsing backup file!');
+        }
+      };
+    }
+  };
+
+  const handleExportCsvData = () => {
+    exportToCsv(members, months, settings);
+  };
+
+  const handleResetDemoData = () => {
+    if (window.confirm(isGu ? 'શું તમે મૂળ ડેમો ડેટા ફરીથી લોડ કરવા માંગો છો?' : 'Reset to initial sample data?')) {
+      setMembers(INITIAL_MEMBERS);
+      setExpenses(INITIAL_EXPENSES);
+      setSettings(INITIAL_SETTINGS);
+      setMonths(DEFAULT_MONTHS);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-orange-500 selection:text-white">
+      
+      {/* Top Header */}
+      <Header
+        settings={settings}
+        lang={lang}
+        setLang={setLang}
+        onOpenAddMember={handleOpenAddMember}
+        onOpenWhatsAppReport={() => setIsWhatsAppOpen(true)}
+        onOpenAutoReminder={() => setIsAutoReminderOpen(true)}
+        onOpenBotModal={() => setIsBotModalOpen(true)}
+        onOpenUpiSettings={() => setIsUpiSettingsOpen(true)}
+        onExportBackup={handleExportBackup}
+        onImportBackup={handleImportBackup}
+        onExportCsv={handleExportCsvData}
+      />
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 space-y-6">
+        
+        {/* KPI Stats & Month Selector */}
+        <StatsOverview
+          members={members}
+          months={months}
+          expenses={expenses}
+          settings={settings}
+          activeMonth={activeMonth}
+          setActiveMonth={setActiveMonth}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          lang={lang}
+        />
+
+        {/* 1st of Month Auto-Reminder Banner */}
+        <MonthlyReminderBanner
+          members={members}
+          activeMonthObj={months.find(m => m.id === activeMonth) || months[0]}
+          settings={settings}
+          onOpenAutoReminderQueue={() => setIsAutoReminderOpen(true)}
+          onOpenBotModal={() => setIsBotModalOpen(true)}
+          lang={lang}
+        />
+
+        {/* Tab 1: 12-Month Matrix */}
+        {activeTab === 'matrix' && (
+          <MembersMatrix
+            members={members}
+            months={months}
+            settings={settings}
+            activeMonth={activeMonth}
+            lang={lang}
+            onOpenPaymentModal={handleOpenPaymentModal}
+            onEditMember={handleOpenEditMember}
+            onDeleteMember={handleDeleteMember}
+            onOpenAddMember={handleOpenAddMember}
+            onClearMembers={handleClearMembers}
+          />
+        )}
+
+        {/* Tab 2: Expenses Tracker */}
+        {activeTab === 'expenses' && (
+          <ExpensesTracker
+            expenses={expenses}
+            onAddExpense={handleAddExpense}
+            onDeleteExpense={handleDeleteExpense}
+            totalCollections={totalCollections}
+            lang={lang}
+          />
+        )}
+
+        {/* Tab 3: Member Passbook View */}
+        {activeTab === 'members' && (
+          <MemberPassbookView
+            members={members}
+            months={months}
+            settings={settings}
+            activeMonth={activeMonth}
+            lang={lang}
+            onOpenPaymentModal={handleOpenPaymentModal}
+          />
+        )}
+
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-slate-400 text-xs py-8 px-4 mt-12 border-t border-slate-800 no-print">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <div>
+            <p className="text-slate-200 font-bold text-sm flex items-center justify-center md:justify-start gap-1.5">
+              <span>🚩 {settings.mandalName}</span>
+              <span className="text-orange-400 font-normal">• {settings.year}</span>
+            </p>
+            <p className="text-slate-500 mt-1">
+              {isGu 
+                ? 'બધા ડેટા આપોઆપ આપના બ્રાઉઝરમાં સુરક્ષિત રહે છે • WhatsApp અને QR કોડ ઇન્ટિગ્રેશન સાથે' 
+                : 'All records auto-saved locally in browser • With WhatsApp & QR Integration'}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => setIsUpiSettingsOpen(true)}
+              className="hover:text-white transition cursor-pointer underline text-slate-400"
+            >
+              {isGu ? 'QR કોડ જુઓ' : 'View QR Code'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={handleExportBackup}
+              className="hover:text-white transition cursor-pointer underline text-slate-400"
+            >
+              {isGu ? 'બેકઅપ ડાઉનલોડ' : 'Download Backup'}
+            </button>
+            <span>•</span>
+            <button
+              onClick={handleResetDemoData}
+              className="text-slate-500 hover:text-rose-400 transition cursor-pointer text-[11px]"
+              title="Reset to sample data"
+            >
+              {isGu ? 'ડેમો ડેટા રીસેટ' : 'Reset Sample Data'}
+            </button>
+          </div>
+        </div>
+      </footer>
+
+      {/* Modals */}
+      <PaymentModal
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
+        member={paymentModalData.member}
+        month={paymentModalData.month}
+        months={months}
+        settings={settings}
+        lang={lang}
+        onSavePayment={handleSavePayment}
+        onSaveMultiPayment={handleSaveMultiMonthPayment}
+        onUpdateMemberPhone={handleUpdateMemberPhone}
+      />
+
+      <AddMemberModal
+        isOpen={isAddMemberOpen}
+        onClose={() => setIsAddMemberOpen(false)}
+        onSaveMember={handleSaveMember}
+        onBulkAddMembers={handleBulkAddMembers}
+        editingMember={editingMember}
+        defaultMonthlyAmount={settings.monthlyAmount}
+        lang={lang}
+      />
+
+      <WhatsAppAutomationModal
+        isOpen={isWhatsAppOpen}
+        onClose={() => setIsWhatsAppOpen(false)}
+        members={members}
+        months={months}
+        expenses={expenses}
+        settings={settings}
+        activeMonth={activeMonth}
+        lang={lang}
+      />
+
+      <UpiSettingsModal
+        isOpen={isUpiSettingsOpen}
+        onClose={() => setIsUpiSettingsOpen(false)}
+        settings={settings}
+        onSaveSettings={handleSaveSettings}
+        lang={lang}
+      />
+
+      <AutoReminderQueueModal
+        isOpen={isAutoReminderOpen}
+        onClose={() => setIsAutoReminderOpen(false)}
+        members={members}
+        activeMonthObj={months.find(m => m.id === activeMonth) || months[0]}
+        settings={settings}
+        lang={lang}
+      />
+
+      <WhatsAppBotModal
+        isOpen={isBotModalOpen}
+        onClose={() => setIsBotModalOpen(false)}
+        members={members}
+        activeMonthObj={months.find(m => m.id === activeMonth) || months[0]}
+        settings={settings}
+        lang={lang}
+      />
+
+    </div>
+  );
+}
+
+export default App;
