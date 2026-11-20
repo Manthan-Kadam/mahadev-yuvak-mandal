@@ -57,20 +57,20 @@ export const WhatsAppAutomationModal = ({
   const pendingMembers = members.filter(m => !m.payments?.[selectedMonthId]?.paid);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[90vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl">
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl flex-shrink-0">
               📲
             </div>
             <div>
-              <h3 className="text-lg font-bold">
+              <h3 className="text-base sm:text-lg font-bold">
                 {isGu ? 'WhatsApp ઓટોમેશન અને રિપોર્ટ શેરિંગ' : 'WhatsApp Automation & Group Reports'}
               </h3>
               <p className="text-emerald-100 text-xs">
@@ -80,14 +80,14 @@ export const WhatsAppAutomationModal = ({
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-4 pt-3 gap-2">
+        <div className="flex border-b border-slate-200 bg-slate-50 px-3 sm:px-4 pt-2.5 gap-1.5 sm:gap-2 flex-shrink-0 overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveReportTab('monthly')}
             className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer border-t-2 border-x ${

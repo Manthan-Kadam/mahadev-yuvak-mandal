@@ -139,19 +139,19 @@ export const AddMemberModal = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-150"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg max-h-[94vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 text-white p-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-600 to-amber-600 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
               <UserPlus className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-bold">
+              <h3 className="text-base sm:text-lg font-bold">
                 {isEditing 
                   ? (isGu ? 'સભ્યની વિગત સુધારો' : 'Edit Member Details')
                   : (isGu ? 'સભ્ય મેન્યુઅલી ઉમેરો' : 'Add Mandal Members')}
@@ -163,7 +163,7 @@ export const AddMemberModal = ({
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -171,41 +171,42 @@ export const AddMemberModal = ({
 
         {/* Tab switch (only if not editing) */}
         {!isEditing && (
-          <div className="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-2">
+          <div className="flex border-b border-slate-200 bg-slate-50 px-3 sm:px-4 pt-2 gap-1.5 sm:gap-2 flex-shrink-0 overflow-x-auto scrollbar-none">
             <button
               onClick={() => setActiveTab('single')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 flex-shrink-0 ${
                 activeTab === 'single'
                   ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <User className="w-3.5 h-3.5" />
-              <span>{isGu ? 'એક સભ્ય ઉમેરો' : 'Add Single Member'}</span>
+              <span>{isGu ? 'એક સભ્ય ઉમેરો' : 'Add Single'}</span>
             </button>
             <button
               onClick={() => setActiveTab('bulk')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 flex-shrink-0 ${
                 activeTab === 'bulk'
                   ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <ListPlus className="w-3.5 h-3.5" />
-              <span>{isGu ? 'એકસાથે ઘણા સભ્યો ઉમેરો (Bulk Add)' : 'Bulk Add from WhatsApp'}</span>
+              <span className="hidden sm:inline">{isGu ? 'એકસાથે ઘણા સભ્યો ઉમેરો (Bulk Add)' : 'Bulk Add from WhatsApp'}</span>
+              <span className="sm:hidden">{isGu ? 'બલ્ક યાદી (Bulk)' : 'Bulk Add'}</span>
             </button>
           </div>
         )}
 
         {error && (
-          <div className="mx-6 mt-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-medium">
+          <div className="mx-4 sm:mx-6 mt-3 sm:mt-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-medium">
             {error}
           </div>
         )}
 
         {/* Tab 1: Single Member Form */}
         {activeTab === 'single' ? (
-          <form onSubmit={handleSingleSubmit} className="p-6 space-y-4 max-h-[460px] overflow-y-auto">
+          <form onSubmit={handleSingleSubmit} className="p-4 sm:p-6 space-y-3.5 max-h-[70vh] overflow-y-auto flex-1">
             {/* Name */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">

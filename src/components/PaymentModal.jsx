@@ -232,40 +232,40 @@ export const PaymentModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-150"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg max-h-[94vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-red-600 text-white p-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-red-600 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
           <div>
             <span className="text-xs font-bold text-amber-200 uppercase tracking-wider">
               {isGu ? 'ગણેશ મહોત્સવ ફાળો પાવતી' : 'Contribution Record'}
             </span>
-            <h3 className="text-xl font-bold flex items-center gap-2 mt-0.5">
+            <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mt-0.5">
               <span>{member.name}</span>
             </h3>
-            <p className="text-orange-100 text-xs mt-1">
+            <p className="text-orange-100 text-[11px] sm:text-xs mt-0.5">
               {settings.mandalName} • {settings.year}
             </p>
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Mode Selector Tabs: Single Month vs Multiple Months */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-4 pt-2.5 gap-2">
+        <div className="flex border-b border-slate-200 bg-slate-50 px-3 sm:px-4 pt-2 gap-1.5 sm:gap-2 flex-shrink-0 overflow-x-auto scrollbar-none">
           {month && (
             <button
               type="button"
               onClick={() => setPayMode('single')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex-shrink-0 ${
                 payMode === 'single'
                   ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                   : 'text-slate-500 hover:text-slate-800'
@@ -278,19 +278,20 @@ export const PaymentModal = ({
           <button
             type="button"
             onClick={() => setPayMode('multi')}
-            className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 flex-shrink-0 ${
               payMode === 'multi' || !month
                 ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
             <Layers className="w-4 h-4 text-orange-600" />
-            <span>{isGu ? '⚡ એકસાથે ઘણા મહિના જમા કરો (Multi-Month)' : '⚡ Pay Multiple Months'}</span>
+            <span className="hidden sm:inline">{isGu ? '⚡ એકસાથે ઘણા મહિના જમા કરો (Multi-Month)' : '⚡ Pay Multiple Months'}</span>
+            <span className="sm:hidden">{isGu ? '⚡ એકસાથે જમા' : '⚡ Multi-Month'}</span>
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 space-y-4 max-h-[65vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 space-y-4 max-h-[70vh] overflow-y-auto flex-1">
           
           {/* TAB 1: Single Month Payment */}
           {payMode === 'single' && month && (

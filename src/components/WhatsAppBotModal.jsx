@@ -112,20 +112,20 @@ export const WhatsAppBotModal = ({
   const pendingCount = members.filter(m => !m.payments?.[activeMonthObj.id]?.paid).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[90vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-600 via-teal-700 to-slate-800 text-white p-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center text-2xl shadow-inner">
+        <div className="bg-gradient-to-r from-emerald-600 via-teal-700 to-slate-800 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white/15 flex items-center justify-center text-xl sm:text-2xl shadow-inner flex-shrink-0">
               🤖
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold">
+                <h3 className="text-base sm:text-lg font-bold">
                   {isGu ? 'ઓટોમેટિક WhatsApp સેન્ડર બોટ' : 'Background WhatsApp Auto-Sender Bot'}
                 </h3>
                 <span className="text-[10px] bg-emerald-400 text-emerald-950 font-extrabold px-2 py-0.5 rounded-full">

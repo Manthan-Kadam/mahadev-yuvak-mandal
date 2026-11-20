@@ -72,19 +72,19 @@ export const AutoReminderQueueModal = ({
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[85vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[94vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-red-600 text-white p-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-red-600 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl">
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl flex-shrink-0">
               🔔
             </div>
             <div>
-              <h3 className="text-lg font-bold">
+              <h3 className="text-base sm:text-lg font-bold">
                 {isGu ? '૧ તારીખ માસિક WhatsApp રીમાઇન્ડર' : '1st of Month Auto-Reminder Dispatcher'}
               </h3>
               <p className="text-orange-100 text-xs">
@@ -96,7 +96,7 @@ export const AutoReminderQueueModal = ({
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>

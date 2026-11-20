@@ -35,33 +35,31 @@ export const Header = ({
 
   return (
     <header className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white shadow-lg sticky top-0 z-30 no-print">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
           
           {/* Logo & Mandal Title */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center text-3xl shadow-inner shadow-black/10 flex-shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center text-2xl sm:text-3xl shadow-inner shadow-black/10 flex-shrink-0">
               🚩
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2 drop-shadow-sm">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-white drop-shadow-sm truncate">
                   {settings.mandalName}
                 </h1>
-                <span className="bg-amber-300 text-amber-950 text-xs font-bold px-2.5 py-0.5 rounded-full shadow-sm">
+                <span className="bg-amber-300 text-amber-950 text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded-full shadow-sm flex-shrink-0">
                   {settings.year}
                 </span>
               </div>
-              <p className="text-orange-100 text-xs sm:text-sm font-medium opacity-90 flex items-center gap-1.5 mt-0.5">
+              <p className="text-orange-100 text-xs sm:text-sm font-medium opacity-90 flex items-center gap-1.5 mt-0.5 truncate">
                 <span>{settings.tagline}</span>
-                <span className="text-orange-300">•</span>
-                <span>{isGu ? '૧૨ મહિના ફાળો અને બચત પોર્ટલ' : '12-Month Fund & Savings Portal'}</span>
               </p>
             </div>
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             
             {/* Language Toggle */}
             <button

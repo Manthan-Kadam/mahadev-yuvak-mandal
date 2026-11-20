@@ -148,17 +148,29 @@ export const MembersMatrix = ({
 
       </div>
 
+      {/* Mobile Swipe Guidance Banner */}
+      <div className="md:hidden px-3.5 py-1.5 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border-b border-orange-200/60 text-[11px] text-orange-950 flex items-center justify-between font-medium">
+        <span className="flex items-center gap-1 font-semibold text-orange-800">
+          <span>👈</span>
+          <span>મહિનાઓ જોવા સ્ક્રોલ કરો</span>
+          <span>👉</span>
+        </span>
+        <span className="text-orange-700 font-bold bg-white px-2 py-0.5 rounded-full shadow-2xs border border-orange-200/60">
+          👆 ખાના પર ક્લિક કરી જમા કરો
+        </span>
+      </div>
+
       {/* Main Responsive Matrix Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[1100px]">
+      <div className="overflow-x-auto scrollbar-thin">
+        <table className="w-full text-left border-collapse min-w-[960px] sm:min-w-[1100px]">
           <thead>
             <tr className="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
-              <th className="py-3 px-3 w-10 text-center sticky left-0 bg-slate-100 z-10">#</th>
-              <th className="py-3 px-4 min-w-[200px] sticky left-10 bg-slate-100 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+              <th className="py-2.5 sm:py-3 px-1.5 sm:px-3 w-8 sm:w-10 text-center sticky left-0 bg-slate-100 z-20">#</th>
+              <th className="py-2.5 sm:py-3 px-2.5 sm:px-4 min-w-[150px] sm:min-w-[200px] sticky left-8 sm:left-10 bg-slate-100 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                 {isGu ? 'સભ્યનું નામ અને વિગત' : 'Member Name & Details'}
               </th>
-              <th className="py-3 px-3 text-center min-w-[90px]">
-                {isGu ? 'માસિક લક્ષ્યાંક' : 'Monthly Target'}
+              <th className="py-2.5 sm:py-3 px-2 text-center min-w-[70px] sm:min-w-[90px]">
+                {isGu ? 'લક્ષ્યાંક' : 'Target'}
               </th>
               
               {/* 12 Months Columns */}
@@ -167,7 +179,7 @@ export const MembersMatrix = ({
                 return (
                   <th 
                     key={m.id} 
-                    className={`py-3 px-2 text-center min-w-[76px] transition-colors ${
+                    className={`py-2.5 sm:py-3 px-1.5 sm:px-2 text-center min-w-[66px] sm:min-w-[76px] transition-colors ${
                       isActive ? 'bg-orange-100 text-orange-950 font-extrabold border-b-2 border-orange-500' : ''
                     }`}
                   >
@@ -181,13 +193,13 @@ export const MembersMatrix = ({
                 );
               })}
 
-              <th className="py-3 px-3 text-center min-w-[95px] bg-slate-50">
+              <th className="py-2.5 sm:py-3 px-2 sm:px-3 text-center min-w-[75px] sm:min-w-[95px] bg-slate-50">
                 {isGu ? 'કુલ જમા' : 'Total Paid'}
               </th>
-              <th className="py-3 px-3 text-center min-w-[95px] bg-slate-50">
+              <th className="py-2.5 sm:py-3 px-2 sm:px-3 text-center min-w-[75px] sm:min-w-[95px] bg-slate-50">
                 {isGu ? 'કુલ બાકી' : 'Pending'}
               </th>
-              <th className="py-3 px-3 text-center min-w-[100px] no-print">
+              <th className="py-2.5 sm:py-3 px-2 sm:px-3 text-center min-w-[90px] sm:min-w-[100px] no-print">
                 {isGu ? 'એક્શન' : 'Actions'}
               </th>
             </tr>
@@ -253,12 +265,12 @@ export const MembersMatrix = ({
                     className="hover:bg-slate-50/80 transition-colors group"
                   >
                     {/* Index */}
-                    <td className="py-3 px-3 text-center text-xs font-semibold text-slate-400 sticky left-0 bg-white group-hover:bg-slate-50 z-10">
+                    <td className="py-2.5 sm:py-3 px-1.5 sm:px-3 text-center text-xs font-semibold text-slate-400 sticky left-0 bg-white group-hover:bg-slate-50 z-10">
                       {index + 1}
                     </td>
 
                     {/* Member Info (Sticky Column) */}
-                    <td className="py-3 px-4 sticky left-10 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                    <td className="py-2.5 sm:py-3 px-2.5 sm:px-4 sticky left-8 sm:left-10 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                       <div className="flex items-center justify-between gap-2">
                         <div>
                           <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5 flex-wrap">

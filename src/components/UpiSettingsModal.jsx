@@ -128,9 +128,9 @@ export const UpiSettingsModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-150"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-lg max-h-[94vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden File Inputs */}
@@ -150,13 +150,13 @@ export const UpiSettingsModal = ({
         />
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white p-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white p-4 sm:p-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
               <QrCode className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-bold">
+              <h3 className="text-base sm:text-lg font-bold">
                 {isGu ? 'ઓનલાઈન UPI / QR કોડ વ્યવસ્થાપન' : 'UPI Payment QR & Mandal Settings'}
               </h3>
               <p className="text-orange-100 text-xs">
@@ -166,17 +166,17 @@ export const UpiSettingsModal = ({
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab switch */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-2">
+        <div className="flex border-b border-slate-200 bg-slate-50 px-3 sm:px-4 pt-2 gap-1.5 sm:gap-2 flex-shrink-0 overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab('qr')}
-            className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 flex-shrink-0 ${
               activeTab === 'qr'
                 ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                 : 'text-slate-500 hover:text-slate-800'
@@ -187,7 +187,7 @@ export const UpiSettingsModal = ({
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-xl transition cursor-pointer flex items-center gap-1.5 flex-shrink-0 ${
               activeTab === 'settings'
                 ? 'bg-white border-t-2 border-orange-600 text-orange-700'
                 : 'text-slate-500 hover:text-slate-800'
@@ -200,7 +200,7 @@ export const UpiSettingsModal = ({
 
         {/* Tab 1: Live QR Code Display with Amount Selector */}
         {activeTab === 'qr' && (
-          <div className="p-5 text-center space-y-4 max-h-[75vh] overflow-y-auto">
+          <div className="p-4 sm:p-5 text-center space-y-4 max-h-[72vh] overflow-y-auto flex-1">
             
             {/* Amount Selection Toolbar */}
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-left space-y-2">
