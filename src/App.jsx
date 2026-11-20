@@ -425,8 +425,9 @@ export function App() {
               </div>
             </div>
 
-            {/* Contact Details (Display only - not a direct click to call) */}
+            {/* Contact Details */}
             <div className="flex flex-wrap items-center justify-center gap-2">
+              {/* Mobile Number - Display only (not direct click to call) */}
               <div
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700/80 shadow-xs select-all"
                 title="Mobile: 9016991020"
@@ -436,14 +437,26 @@ export function App() {
                 <span className="text-white font-bold tracking-wide">9016991020</span>
               </div>
 
-              <div
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700/80 shadow-xs select-all"
-                title="Email: mannkadam20@gmail.com"
+              {/* Clickable WhatsApp Chat */}
+              <a
+                href="https://wa.me/919016991020?text=Hello%20Manthan,%20I%20saw%20your%20Ganesh%20Mandal%20Portal!"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 hover:text-emerald-100 transition text-xs font-semibold border border-emerald-800/60 shadow-xs cursor-pointer"
+                title="WhatsApp Manthan Kadam"
+              >
+                <span>💬 WhatsApp</span>
+              </a>
+
+              {/* Clickable Email */}
+              <a
+                href="mailto:mannkadam20@gmail.com"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition text-xs font-semibold border border-slate-700/80 shadow-xs cursor-pointer"
+                title="Email Manthan Kadam"
               >
                 <Mail className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                <span className="text-slate-400 font-normal">{isGu ? 'ઈમેઇલ:' : 'Email:'}</span>
-                <span className="text-white font-medium">mannkadam20@gmail.com</span>
-              </div>
+                <span>mannkadam20@gmail.com</span>
+              </a>
             </div>
           </div>
 

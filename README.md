@@ -84,8 +84,9 @@ git push -u origin main
 ## 👨‍💻 ડેવલપર & સંપર્ક (Developer & Contact)
 
 - **તૈયાર કરનાર / Developer**: **Manthan Kadam**
-- **📱 મોબાઇલ નંબર (Mobile)**: **9016991020**
-- **✉️ ઈમેઇલ (Email)**: **mannkadam20@gmail.com**
+- **📱 મોબાઇલ નંબર (Mobile)**: **9016991020** *(Display Only)*
+- **💬 WhatsApp**: [Click to Chat on WhatsApp](https://wa.me/919016991020)
+- **✉️ ઈમેઇલ (Email)**: [mannkadam20@gmail.com](mailto:mannkadam20@gmail.com)
 
 > *મંડળ, ટ્રસ્ટ અથવા અન્ય ઉત્સવો માટે આવા ઓટોમેટેડ પોર્ટલ અને સોફ્ટવેર બનાવવા માટે ઉપર આપેલા નંબર અથવા ઈમેઇલ પર સંપર્ક કરી શકો છો.* 🙏
 
