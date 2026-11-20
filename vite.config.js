@@ -8,4 +8,9 @@ export default defineConfig({
     tailwindcss(),
     react()
   ],
+  server: {
+    watch: {
+      ignored: ['**/data/**', '**/whatsapp_auth/**', '**/database.json']
+    }
+  }
 })

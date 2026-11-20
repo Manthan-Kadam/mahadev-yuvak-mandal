@@ -21,7 +21,7 @@ import {
 import { INITIAL_MEMBERS, INITIAL_EXPENSES, INITIAL_SETTINGS, DEFAULT_MONTHS } from './data/initialData';
 
 export function App() {
-  const initial = loadStoredData();
+  const [initial] = useState(() => loadStoredData());
 
   const [members, setMembers] = useState(initial.members);
   const [expenses, setExpenses] = useState(initial.expenses);
@@ -66,13 +66,17 @@ export function App() {
     saveToStorage('LANG', lang);
   }, [lang]);
 
-  // Sync state to backend database so cron job can access it even when browser is closed
+  // Sync state to backend database so cron job can access it even when browser is closed (debounced)
   useEffect(() => {
-    fetch('http://localhost:3001/api/sync-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ members, settings, months, expenses, activeMonth })
-    }).catch(() => {});
+    const timer = setTimeout(() => {
+      fetch('http://localhost:3001/api/sync-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ members, settings, months, expenses, activeMonth })
+      }).catch(() => {});
+    }, 2500);
+
+    return () => clearTimeout(timer);
   }, [members, settings, months, expenses, activeMonth]);
 
   const isGu = lang === 'gu';
