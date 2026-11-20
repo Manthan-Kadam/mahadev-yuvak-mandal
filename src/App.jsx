@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Phone, Mail, Sparkles } from 'lucide-react';
 import { Header } from './components/Header';
 import { StatsOverview } from './components/StatsOverview';
 import { MembersMatrix } from './components/MembersMatrix';
@@ -351,43 +352,110 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 text-xs py-8 px-4 mt-12 border-t border-slate-800 no-print">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          <div>
-            <p className="text-slate-200 font-bold text-sm flex items-center justify-center md:justify-start gap-1.5">
-              <span>🚩 {settings.mandalName}</span>
-              <span className="text-orange-400 font-normal">• {settings.year}</span>
-            </p>
-            <p className="text-slate-500 mt-1">
-              {isGu 
-                ? 'બધા ડેટા આપોઆપ આપના બ્રાઉઝરમાં સુરક્ષિત રહે છે • WhatsApp અને QR કોડ ઇન્ટિગ્રેશન સાથે' 
-                : 'All records auto-saved locally in browser • With WhatsApp & QR Integration'}
-            </p>
+      <footer className="bg-slate-900 text-slate-400 text-xs pt-10 pb-8 px-4 mt-14 border-t border-slate-800 no-print">
+        <div className="max-w-7xl mx-auto space-y-7">
+          
+          {/* Top Row: Mandal Info & Quick Links */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+            <div>
+              <p className="text-slate-200 font-bold text-sm flex items-center justify-center md:justify-start gap-2">
+                <span className="text-base">🚩</span>
+                <span>{settings.mandalName}</span>
+                <span className="text-orange-400 font-normal bg-orange-950/80 px-2 py-0.5 rounded-full text-xs border border-orange-800/40">• {settings.year}</span>
+              </p>
+              <p className="text-slate-500 mt-1.5 text-xs max-w-xl">
+                {isGu 
+                  ? 'ગણેશ ચતુર્થી ૧૨ મહિનાનો માસિક ફાળો, ખર્ચ અને ઓટોમેટિક WhatsApp રીમાઇન્ડર/પાવતી સિસ્ટમ' 
+                  : '12-Month Ganesh Festival Fund Tracker with WhatsApp Automation & Digital Receipts'}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+              <button
+                onClick={() => setIsUpiSettingsOpen(true)}
+                className="hover:text-orange-400 transition cursor-pointer text-slate-400"
+              >
+                {isGu ? 'QR કોડ જુઓ' : 'View QR Code'}
+              </button>
+              <span className="text-slate-700">•</span>
+              <button
+                onClick={handleExportBackup}
+                className="hover:text-orange-400 transition cursor-pointer text-slate-400"
+              >
+                {isGu ? 'બેકઅપ ડાઉનલોડ' : 'Download Backup'}
+              </button>
+              <span className="text-slate-700">•</span>
+              <button
+                onClick={handleResetDemoData}
+                className="text-slate-500 hover:text-rose-400 transition cursor-pointer text-[11px]"
+                title="Reset to sample data"
+              >
+                {isGu ? 'ડેમો ડેટા રીસેટ' : 'Reset Sample Data'}
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => setIsUpiSettingsOpen(true)}
-              className="hover:text-white transition cursor-pointer underline text-slate-400"
-            >
-              {isGu ? 'QR કોડ જુઓ' : 'View QR Code'}
-            </button>
-            <span>•</span>
-            <button
-              onClick={handleExportBackup}
-              className="hover:text-white transition cursor-pointer underline text-slate-400"
-            >
-              {isGu ? 'બેકઅપ ડાઉનલોડ' : 'Download Backup'}
-            </button>
-            <span>•</span>
-            <button
-              onClick={handleResetDemoData}
-              className="text-slate-500 hover:text-rose-400 transition cursor-pointer text-[11px]"
-              title="Reset to sample data"
-            >
-              {isGu ? 'ડેમો ડેટા રીસેટ' : 'Reset Sample Data'}
-            </button>
+          {/* Developer Credit & Contact Card: Manthan Kadam */}
+          <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800/90 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left shadow-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-600 via-amber-500 to-yellow-500 text-white flex items-center justify-center text-lg shadow-md font-extrabold flex-shrink-0">
+                MK
+              </div>
+              <div>
+                <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                  <span className="text-slate-400 text-xs">
+                    {isGu ? 'તૈયાર કરનાર (Developed by):' : 'Designed & Developed by:'}
+                  </span>
+                  <span className="text-white font-extrabold text-sm tracking-wide bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200 bg-clip-text text-transparent">
+                    Manthan Kadam
+                  </span>
+                  <span className="text-[10px] bg-orange-500/15 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-medium">
+                    Creator
+                  </span>
+                </div>
+                <p className="text-slate-500 text-[11px] mt-0.5">
+                  {isGu 
+                    ? 'તમારા મંડળ, ટ્રસ્ટ અથવા સંસ્થા માટે આવા કસ્ટમ સોફ્ટવેર/પોર્ટલ બનાવવા માટે સંપર્ક કરી શકો છો' 
+                    : 'Custom web portals & automated software solutions for groups and communities'}
+                </p>
+              </div>
+            </div>
+
+            {/* Direct Contact Links */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <a
+                href="tel:9016991020"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition text-xs font-semibold border border-slate-700/80 shadow-xs"
+                title="Call Manthan Kadam"
+              >
+                <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                <span>+91 9016991020</span>
+              </a>
+
+              <a
+                href="https://wa.me/919016991020?text=Hello%20Manthan,%20I%20saw%20your%20Ganesh%20Mandal%20Portal!"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 hover:text-emerald-100 transition text-xs font-semibold border border-emerald-800/60 shadow-xs"
+                title="WhatsApp Manthan Kadam"
+              >
+                <span>💬 WhatsApp</span>
+              </a>
+
+              <a
+                href="mailto:mannkadam20@gmail.com"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition text-xs font-semibold border border-slate-700/80 shadow-xs"
+                title="Email Manthan Kadam"
+              >
+                <Mail className="w-3.5 h-3.5 text-amber-400" />
+                <span>mannkadam20@gmail.com</span>
+              </a>
+            </div>
           </div>
+
+          <p className="text-center text-slate-600 text-[11px]">
+            © {new Date().getFullYear()} {settings.mandalName} • Built with devotion for Ganesh Mahotsav 🙏
+          </p>
         </div>
       </footer>
 
