@@ -1,92 +1,178 @@
-# 🚩 શ્રી મહાદેવ યુવક મંડળ - ગણેશ ચતુર્થી ફાળો અને WhatsApp ઓટોમેશન પોર્ટલ
-**Shree Mahadev Yuvak Mandal - 12 Months Fund Tracker & Automated WhatsApp System (2026-2027)**
+# 🚩 Shree Mahadev Yuvak Mandal (શ્રી મહાદેવ યુવક મંડળ)
+### Ganesh Utsav 12-Month Fund Tracker & Automated WhatsApp Bot System (2026-2027)
+
+[![React](https://img.shields.io/badge/React-19-blue.svg?logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF.svg?logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC.svg?logo=tailwind-css)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express_5-339933.svg?logo=node.js)](https://nodejs.org/)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-Baileys_Automation-25D366.svg?logo=whatsapp)](https://github.com/WhiskeySockets/Baileys)
 
 ---
 
-## 🌟 મુખ્ય વિશેષતાઓ (Key Features)
+## 📖 Overview
 
-1. **૧૨ મહિનાનો સંપૂર્ણ મેટ્રિક્સ હિસાબ (12-Month Matrix View)**:
-   - ઓક્ટોબર ૨૦૨૬ થી સપ્ટેમ્બર ૨૦૨૭ સુધીનો સંપૂર્ણ લેખા-જોખા.
-   - ડિફોલ્ટ માસિક ફાળો: ₹૩૦૦ (દરેક સભ્ય માટે કસ્ટમાઇઝ કરી શકાય છે).
-   - 🟢 લીલો રંગ: ફાળો જમા છે (Amount & Mode).
-   - 🔴 લાલ રંગ: ફાળો બાકી છે (Click to Pay).
-
-2. **WhatsApp સ્માર્ટ ઓટોમેશન (Bhai / Ben Salutation)**:
-   - **નામ પરથી ભાઈ / બહેન ઓટો-ડિટેક્ટ**:
-     - દા.ત. *ગીતાબેન* -> "નમસ્તે \*ગીતાબેન\*"
-     - દા.ત. *પૂજા* -> "નમસ્તે \*પૂજા\* બહેન"
-     - દા.ત. *રમેશભાઈ* -> "નમસ્તે \*રમેશભાઈ\*"
-     - દા.ત. *મંથન* -> "નમસ્તે \*મંથન\* ભાઈ"
-   - **૧ તારીખ ઓટો-રીમાઇન્ડર કતાર (Queue)**: ૧-૧ ક્લિકમાં બાકી તમામ સભ્યોને વ્યક્તિગત મેસેજ.
-   - **ડિજિટલ પાવતી (Digital Receipts)**: સિંગલ મહિનો અથવા એકસાથે ૨, ૩, ૬ કે ૧૨ મહિના ચૂકવવા પર ત્વરિત રસીદ.
-   - **સંપૂર્ણ ગ્રૂપ રિપોર્ટ**: આખા મંડળના વોટ્સએપ ગ્રૂપમાં મૂકવા માટે સુંદર ગુજરાતી રિપોર્ટ.
-
-3. **કસ્ટમ QR & ફ્લેક્સિબલ રકમ સિલેક્ટર**:
-   - મંડળનો પોતાનો QR કોડ ફોટો અપલોડ કરી શકાય છે.
-   - ઓપન રકમ (સ્કેન કરનાર જાતે રકમ લખી શકે) અથવા ₹૧૦૦, ₹૩૦૦, ₹૬૦૦, ₹૯૦૦, ₹૧૮૦૦, ₹૩૬૦૦ જેવા પ્રીસેટ ઓપ્શન.
-
-4. **ઓટોમેટિક બેકગ્રાઉન્ડ વોટ્સએપ બોટ (Baileys Engine)**:
-   - દર મહિનાની ૧ તારીખે સવારે ૦૯:૦૦ વાગ્યે આપોઆપ બાકી સભ્યોને મેસેજ પહોંચાડવાનું શેડ્યૂલર.
+**Shree Mahadev Yuvak Mandal** is a modern, responsive, full-stack community management and donation-tracking platform created for Ganesh Mahotsav. Built with **React 19**, **Tailwind CSS v4**, and a dedicated **Node.js Express backend**, it eliminates manual bookkeeping and paper receipts with automated WhatsApp notifications, real-time multi-device cloud synchronization, public self-registration, and PIN-protected admin controls.
 
 ---
 
-## 🚀 લોકલ મશીન પર ચલાવવા માટે (Local Development)
+## ✨ Key Features
 
-```bash
-# ડિપેન્ડન્સી ઇન્સ્ટોલ કરો
-npm install
+### 1. 📊 12-Month Contribution Matrix (Oct 2026 – Sep 2027)
+- **Complete Festival Cycle**: Tracks monthly dues across the full 12-month calendar (October to September).
+- **Visual Status Tracking**:
+  - 🟢 **Green (Paid)**: Instant verification showing amount, date, and mode (UPI / Cash).
+  - 🔴 **Red (Due)**: 1-click modal to record payments, select multiple months, or send reminders.
+- **Dynamic KPI Dashboard**: Live tracking of total funds raised, monthly collection rates, pending dues, total expenditures, and net surplus.
+- **Passbook & Ledger View**: Individual passbooks for each member displaying detailed transaction histories.
 
-# ૧. ફ્રન્ટએન્ડ પોર્ટલ શરૂ કરો (Port 5173)
-npm run dev
+### 2. 🤖 Automated WhatsApp Bot (Baileys Engine)
+- **Smart Salutation Detection**: Automatically recognizes Gujarati names and greets members respectfully:
+  - Female members: e.g., *Pooja* ➔ `"નમસ્તે પૂજા બહેન"`
+  - Male members: e.g., *Hitesh* ➔ `"નમસ્તે હિતેશભાઈ"`
+- **1st of the Month Auto-Scheduler (Cron)**: Built-in background cron job that automatically dispatches monthly dues reminders on the 1st of every month at 09:00 AM without manual intervention.
+- **Instant Digital Receipts**: Generates and sends formatted digital WhatsApp receipts for single or multi-month advances (2, 3, 6, or 12 months) immediately upon payment confirmation.
+- **Transparency Group Reports**: Generates detailed Gujarati group status reports for copy-pasting directly into community WhatsApp groups.
 
-# ૨. વોટ્સએપ બોટ સર્વર શરૂ કરો (Port 3001)
-npm run server
+### 3. 🛡️ Centralized Admin Security & PIN Lock
+- **Role-Based Access Control**:
+  - **Public Members**: Can view official accounts, scan the payment QR, pay via UPI, and self-register. Cannot alter financial details or hijack the bot.
+  - **Lead Administrator (Manthan Kadam)**: Protected by a secure Admin PIN (`1020`).
+- **Protected Actions (Admin Only)**:
+  - Uploading or replacing custom QR code images.
+  - Modifying the official Treasurer UPI ID (`rajmakwna4512@okaxis`).
+  - Scanning the master WhatsApp QR pairing code.
+  - Disconnecting or managing the WhatsApp bot session.
+  - Performing mass-dispatch or clearing member records.
+
+### 4. 👥 Public Self-Registration (✨ સભ્ય તરીકે જાતે જોડાઓ)
+- Allows community members to enroll themselves directly from their smartphones.
+- Automatically suggests salutations (*Bhai* / *Ben*), validates 10-digit mobile numbers, and prevents duplicate registrations.
+- Features celebratory confetti animations (`canvas-confetti`) upon joining and offers instant WhatsApp welcome verification.
+
+### 5. 🔄 Real-Time Multi-Device Cloud Synchronization
+- Powered by a unified REST API (`/api/data`, `/api/members/join`, `/api/sync-data`) backed by a centralized JSON datastore.
+- Background polling ensures that any update made on one phone (new registrations, payment check-offs) is reflected across all devices in real time without refreshing.
+- Integrated offline caching (`localStorage`) guarantees instant page loads even on slow networks.
+
+### 6. 📱 100% Mobile Responsive UI
+- Specially optimized for smartphone screens with thumb-friendly buttons, responsive modals, swipe-guidance banners, and fast touch feedback.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 19, Vite 8, Tailwind CSS v4, Lucide React, Canvas Confetti |
+| **Backend** | Node.js, Express 5, Node-Cron, Pino Logger |
+| **WhatsApp Automation** | `@whiskeysockets/baileys` (Multi-device socket protocol) |
+| **Storage & Database** | Centralized JSON Storage (`data/database.json`), LocalStorage Cache |
+| **Deployment** | Vercel (Frontend), Node.js server (Backend & Bot) |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18.0.0 or higher)
+- [npm](https://www.npmjs.com/)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Manthan-Kadam/mahadev-yuvak-mandal.git
+   cd mahadev-yuvak-mandal
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Run the local development server:**
+   ```bash
+   npm run dev
+   ```
+   *Frontend will be running at:* `http://localhost:5173/`
+
+4. **Start the backend & WhatsApp Bot server:**
+   ```bash
+   npm run server
+   ```
+   *Server will be running at:* `http://localhost:3001/`
+
+---
+
+## 🌐 Production Deployment
+
+### 1. Frontend Deployment (Vercel)
+1. Fork or push this repository to your GitHub account (`Manthan-Kadam/mahadev-yuvak-mandal`).
+2. Log into [Vercel](https://vercel.com) using your GitHub account.
+3. Import the `mahadev-yuvak-mandal` repository.
+4. The project includes a pre-configured `vercel.json` file—simply click **Deploy**!
+5. Your live site will be ready in under a minute (e.g., `https://mahadev-yuvak-mandal.vercel.app`).
+
+### 2. Backend & WhatsApp Bot Deployment (Render / Cloud VPS)
+Because the WhatsApp bot engine requires a persistent background Node.js process and socket connection:
+1. Deploy `server.js` to a free Node service like [Render.com](https://render.com) or [Railway.app](https://railway.app).
+2. Set Build Command: `npm install && npm run build`
+3. Set Start Command: `node server.js`
+4. The server will host both the API and the production frontend bundle (`dist/`).
+
+---
+
+## 📁 Project Structure
+
+```text
+mahadev-yuvak-mandal/
+├── data/
+│   └── database.json          # Centralized persistent datastore
+├── public/                    # Static assets & icons
+├── src/
+│   ├── components/
+│   │   ├── AddMemberModal.jsx         # Manual & bulk member management
+│   │   ├── AutoReminderQueueModal.jsx # 1-click personal reminder queue
+│   │   ├── ExpensesTracker.jsx        # Mandal expense management & balance
+│   │   ├── Header.jsx                 # Navbar with actions & self-join
+│   │   ├── MemberPassbookView.jsx     # Individual member passbook ledger
+│   │   ├── MembersMatrix.jsx          # 12-Month donation tracking grid
+│   │   ├── MonthlyReminderBanner.jsx  # Notification banner for active month
+│   │   ├── PaymentModal.jsx           # Payment collection & multi-month receipts
+│   │   ├── SelfJoinModal.jsx          # Public self-registration form
+│   │   ├── StatsOverview.jsx          # Collection KPIs & month selector
+│   │   ├── UpiSettingsModal.jsx       # Protected UPI QR & Mandal settings
+│   │   ├── WhatsAppAutomationModal.jsx# Manual WhatsApp message previews
+│   │   └── WhatsAppBotModal.jsx       # Background automated Baileys bot
+│   ├── data/
+│   │   └── initialData.js             # Initial state, months, & settings
+│   ├── utils/
+│   │   ├── storage.js                 # Data persistence & backup utilities
+│   │   └── whatsapp.js                # Greeting logic & WhatsApp URL formatters
+│   ├── App.jsx                        # Root React component & sync state
+│   ├── index.css                      # Tailwind CSS v4 styling
+│   └── main.jsx                       # React DOM entry point
+├── server.js                          # Express API, WhatsApp Bot, & Cron scheduler
+├── vercel.json                        # Vercel deployment routing configuration
+├── vite.config.js                     # Vite build configuration with API proxy
+└── package.json                       # Project scripts and dependencies
 ```
 
-બ્રાઉઝરમાં ખોલો: `http://localhost:5173/`
+---
+
+## 👨‍💻 Author & Developer
+
+**Built with dedication by Manthan Kadam**
+
+- **Developer**: Manthan Kadam
+- **Mobile**: `9016991020`
+- **WhatsApp**: [Click to Chat on WhatsApp](https://wa.me/919016991020?text=Hello%20Manthan,%20I%20saw%20your%20Ganesh%20Mandal%20Portal!)
+- **Email**: [mannkadam20@gmail.com](mailto:mannkadam20@gmail.com)
+- **GitHub**: [@Manthan-Kadam](https://github.com/Manthan-Kadam)
 
 ---
 
-## 🌐 ફ્રીમાં ઇન્ટરનેટ પર લાઈવ (Launch) કરવાના સ્ટેપ્સ
+## 📄 License
 
-તમે આ પોર્ટલને **૧૦૦% ફ્રીમાં Vercel પર લાઈવ** કરી શકો છો જેથી તમારા મંડળના તમામ સભ્યો પોતાના મોબાઈલમાંથી ગમે ત્યારે હિસાબ જોઈ શકે:
-
-### પગલું ૧: GitHub પર પ્રોજેક્ટ અપલોડ કરો (Upload to GitHub)
-
-1. [GitHub.com](https://github.com/new) ખોલો અને **New Repository** બનાવો (દા.ત. `mahadev-yuvak-mandal`).
-2. રિપોઝીટરી **Public** રાખો અને **Create repository** બટન દબાવો.
-3. તમારા કોમ્પ્યુટરમાં ટર્મિનલ ખોલી નીચેના બે કમાન્ડ ચલાવો:
-```bash
-git remote add origin https://github.com/<YOUR-GITHUB-USERNAME>/mahadev-yuvak-mandal.git
-git push -u origin main
-```
-
----
-
-### પગલું ૨: Vercel પર ૧-ક્લિકમાં ફ્રી લોન્ચ કરો (Deploy on Vercel)
-
-1. [Vercel.com](https://vercel.com) પર જાઓ અને **GitHub થી સાઇન ઇન** કરો.
-2. **"Add New..."** -> **"Project"** પર ક્લિક કરો.
-3. તમારી GitHub રિપોઝીટરી પસંદ કરીને **"Import"** દબાવો.
-4. Framework Preset માં **Vite** આપોઆપ આવી જશે.
-5. **"Deploy"** બટન પર ક્લિક કરો.
-6. ૩૦ સેકન્ડમાં તમારી લિંક તૈયાર થઈ જશે (દા.ત. `https://mahadev-yuvak-mandal.vercel.app`)!
-
----
-
-### 📲 મોબાઈલ અને ગ્રૂપમાં ઉપયોગ:
-- આ ફ્રી Vercel લિંક તમે તમારા WhatsApp ગ્રૂપમાં શેર કરી શકો છો.
-- બધા સભ્યો પોતાના ફોનમાંથી લાઈવ હિસાબ જોઈ શકશે.
-- ખજાનચી પોતાના ફોનમાંથી જ "મોકલો" દબાવીને સભ્યોને સીધા WhatsApp રીમાઇન્ડર અને પાવતી મોકલી શકશે.
-
----
-
-## 👨‍💻 ડેવલપર & સંપર્ક (Developer & Contact)
-
-- **તૈયાર કરનાર / Developer**: **Manthan Kadam**
-- **📱 મોબાઇલ નંબર (Mobile)**: **9016991020** *(Display Only)*
-- **💬 WhatsApp**: [Click to Chat on WhatsApp](https://wa.me/919016991020)
-- **✉️ ઈમેઇલ (Email)**: [mannkadam20@gmail.com](mailto:mannkadam20@gmail.com)
-
-> *મંડળ, ટ્રસ્ટ અથવા અન્ય ઉત્સવો માટે આવા ઓટોમેટેડ પોર્ટલ અને સોફ્ટવેર બનાવવા માટે ઉપર આપેલા નંબર અથવા ઈમેઇલ પર સંપર્ક કરી શકો છો.* 🙏
-
+This project is licensed under the [MIT License](LICENSE).
+Feel free to use and adapt this system for your local mandals, non-profit trusts, and festivals! 🙏
