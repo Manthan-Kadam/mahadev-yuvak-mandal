@@ -14,7 +14,8 @@ import {
   PhoneCall,
   UserPlus,
   ListPlus,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { createPersonalReminderUrl, getMemberGreeting } from '../utils/whatsapp';
 
@@ -28,6 +29,7 @@ export const MembersMatrix = ({
   onEditMember,
   onDeleteMember,
   onOpenAddMember,
+  onOpenSelfJoin,
   onClearMembers,
   onOpenReceiptModal
 }) => {
@@ -121,6 +123,18 @@ export const MembersMatrix = ({
               {isGu ? 'બાકી' : 'Pending'}
             </button>
           </div>
+
+          {/* Self Join button for public */}
+          {onOpenSelfJoin && (
+            <button
+              onClick={onOpenSelfJoin}
+              className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer no-print border border-amber-500/30"
+              title={isGu ? 'કોઈપણ વ્યક્તિ સભ્ય તરીકે જાતે જોડાઈ શકે છે' : 'Join as Member'}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-900" />
+              <span>{isGu ? '✨ જાતે જોડાઓ' : 'Join'}</span>
+            </button>
+          )}
 
           {/* Quick Add Member button */}
           {onOpenAddMember && (

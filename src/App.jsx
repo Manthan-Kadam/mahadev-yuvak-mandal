@@ -12,6 +12,7 @@ import { UpiSettingsModal } from './components/UpiSettingsModal';
 import { MonthlyReminderBanner } from './components/MonthlyReminderBanner';
 import { AutoReminderQueueModal } from './components/AutoReminderQueueModal';
 import { WhatsAppBotModal } from './components/WhatsAppBotModal';
+import { SelfJoinModal } from './components/SelfJoinModal';
 import { 
   loadStoredData, 
   saveToStorage, 
@@ -48,6 +49,37 @@ export function App() {
   const [isUpiSettingsOpen, setIsUpiSettingsOpen] = useState(false);
   const [isAutoReminderOpen, setIsAutoReminderOpen] = useState(false);
   const [isBotModalOpen, setIsBotModalOpen] = useState(false);
+  const [isSelfJoinOpen, setIsSelfJoinOpen] = useState(false);
+
+  // Auto-sync with backend so all devices & users see the exact same real-time members
+  useEffect(() => {
+    let isMounted = true;
+    const fetchServerData = async () => {
+      try {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data) {
+            if (data.members && Array.isArray(data.members) && data.members.length > 0) {
+              setMembers(data.members);
+            }
+            if (data.settings && Object.keys(data.settings).length > 0) {
+              setSettings(prev => ({ ...prev, ...data.settings }));
+            }
+          }
+        }
+      } catch (e) {
+        // Fallback to local storage if offline
+      }
+    };
+
+    fetchServerData();
+    const interval = setInterval(fetchServerData, 8000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   // Sync state changes to localStorage
   useEffect(() => {
@@ -125,6 +157,36 @@ export function App() {
       payments: {}
     }));
     setMembers(prev => [...prev, ...formatted]);
+  };
+
+  const handleSelfJoinMember = async (memberData) => {
+    const newMember = {
+      ...memberData,
+      id: `mem_${Date.now()}`,
+      joinedDate: new Date().toISOString().split('T')[0],
+      payments: {}
+    };
+
+    setMembers(prev => [...prev, newMember]);
+
+    try {
+      const res = await fetch('/api/members/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(memberData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.allMembers) {
+          setMembers(data.allMembers);
+        }
+      } else {
+        const errData = await res.json();
+        if (errData.error) throw new Error(errData.error);
+      }
+    } catch (err) {
+      if (err.message && !err.message.includes('fetch')) throw err;
+    }
   };
 
   const handleClearMembers = () => {
@@ -290,6 +352,7 @@ export function App() {
         lang={lang}
         setLang={setLang}
         onOpenAddMember={handleOpenAddMember}
+        onOpenSelfJoin={() => setIsSelfJoinOpen(true)}
         onOpenWhatsAppReport={() => setIsWhatsAppOpen(true)}
         onOpenAutoReminder={() => setIsAutoReminderOpen(true)}
         onOpenBotModal={() => setIsBotModalOpen(true)}
@@ -337,6 +400,7 @@ export function App() {
             onEditMember={handleOpenEditMember}
             onDeleteMember={handleDeleteMember}
             onOpenAddMember={handleOpenAddMember}
+            onOpenSelfJoin={() => setIsSelfJoinOpen(true)}
             onClearMembers={handleClearMembers}
           />
         )}
@@ -534,6 +598,15 @@ export function App() {
         onClose={() => setIsBotModalOpen(false)}
         members={members}
         activeMonthObj={months.find(m => m.id === activeMonth) || months[0]}
+        settings={settings}
+        lang={lang}
+      />
+
+      <SelfJoinModal
+        isOpen={isSelfJoinOpen}
+        onClose={() => setIsSelfJoinOpen(false)}
+        onRegisterMember={handleSelfJoinMember}
+        defaultMonthlyAmount={settings.monthlyAmount || 300}
         settings={settings}
         lang={lang}
       />

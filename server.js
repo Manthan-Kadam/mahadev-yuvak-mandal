@@ -435,7 +435,91 @@ _હર હર મહાદેવ 🚩 ગણપતિ બાપ્પા મો
   }
 });
 
-// 6. Sync Portal Database from frontend
+// 6. Get Portal Database for all clients/devices
+app.get('/api/data', (req, res) => {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const content = fs.readFileSync(DB_FILE, 'utf-8');
+      const data = JSON.parse(content);
+      return res.json(data);
+    }
+    res.json({ members: [], settings: {}, months: [], expenses: [] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 7. Public Self-Registration endpoint (Anyone can join as member)
+app.post('/api/members/join', async (req, res) => {
+  try {
+    const { name, phone, gender = 'auto', monthlyTarget = 300 } = req.body;
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'કૃપા કરીને પૂરું નામ લખો.' });
+    }
+
+    const cleanPhone = (phone || '').replace(/\D/g, '');
+    if (cleanPhone && cleanPhone.length !== 10) {
+      return res.status(400).json({ error: 'કૃપા કરીને ૧૦ અંકનો સાચો મોબાઇલ નંબર લખો.' });
+    }
+
+    let data = { members: [], settings: {}, months: [], expenses: [] };
+    if (fs.existsSync(DB_FILE)) {
+      data = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+    }
+
+    // Check if phone already registered
+    if (cleanPhone) {
+      const exists = data.members.find(m => m.phone && m.phone.replace(/\D/g, '') === cleanPhone);
+      if (exists) {
+        return res.status(400).json({ error: `આ મોબાઇલ નંબર (${cleanPhone}) પહેલેથી જ સભ્ય '${exists.name}' ના નામે નોંધાયેલ છે!` });
+      }
+    }
+
+    const newMember = {
+      id: `mem_${Date.now()}`,
+      name: name.trim(),
+      phone: cleanPhone,
+      role: 'સભ્ય (Member)',
+      gender: gender,
+      monthlyTarget: Number(monthlyTarget) || 300,
+      joinedDate: new Date().toISOString().split('T')[0],
+      payments: {}
+    };
+
+    data.members.push(newMember);
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    console.log(`✨ New member self-registered: ${newMember.name} (${newMember.phone || 'No phone'})`);
+
+    // If WhatsApp Bot is active, send an automated welcome message!
+    if (isConnected && sock && cleanPhone) {
+      try {
+        const jid = formatJid(cleanPhone);
+        const greeting = getMemberGreeting(newMember);
+        const welcomeText = 
+`🚩 *${data.settings?.mandalName || 'શ્રી મહાદેવ યુવક મંડળ'}* 🚩
+ગણેશ મહોત્સવ ${data.settings?.year || '૨૦૨૬-૨૦૨૭'}
+
+નમસ્તે ${newMember.name} ${greeting}! 🙏
+
+તમે શ્રી મહાદેવ યુવક મંડળમાં સભ્ય તરીકે સફળતાપૂર્વક જોડાઈ ગયા છો. 
+તમારો માસિક ફાળો લક્ષ્યાંક ₹${newMember.monthlyTarget} નોંધાયેલ છે.
+
+હર હર મહાદેવ 🚩 ગણપતિ બાપ્પા મોરિયા! 🌺`;
+
+        await sock.sendMessage(jid, { text: welcomeText });
+        console.log(`📲 Sent automated welcome WhatsApp to ${newMember.name}`);
+      } catch (waErr) {
+        console.error('Welcome WhatsApp send error:', waErr.message);
+      }
+    }
+
+    res.json({ success: true, member: newMember, allMembers: data.members });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 8. Sync Portal Database from frontend
 app.post('/api/sync-data', (req, res) => {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(req.body, null, 2), 'utf-8');
@@ -505,6 +589,15 @@ _હર હર મહાદેવ 🚩 ગણપતિ બાપ્પા મો
     console.error('Error in 1st of month cron:', e);
   }
 });
+
+const DIST_DIR = path.join(__dirname, 'dist');
+if (fs.existsSync(DIST_DIR)) {
+  app.use(express.static(DIST_DIR));
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`🚀 Mahadev Yuvak Mandal WhatsApp Bot Server running on http://localhost:${PORT}`);

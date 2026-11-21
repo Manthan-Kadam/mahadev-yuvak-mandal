@@ -11,7 +11,10 @@ import {
   Sparkles, 
   Clock, 
   ShieldCheck,
-  Check
+  Check,
+  Lock,
+  Unlock,
+  KeyRound
 } from 'lucide-react';
 
 export const WhatsAppBotModal = ({ 
@@ -30,6 +33,12 @@ export const WhatsAppBotModal = ({
   const [sending, setSending] = useState(false);
   const [refreshingQr, setRefreshingQr] = useState(false);
   const [dispatchResults, setDispatchResults] = useState(null);
+
+  // Admin PIN Protection State (Only Manthan Kadam can manage the WhatsApp QR/Session)
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
+  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
 
   // Poll status while modal is open
   const fetchStatus = async () => {
@@ -55,7 +64,26 @@ export const WhatsAppBotModal = ({
     return () => clearInterval(interval);
   }, []);
 
+  const handleVerifyPin = () => {
+    const validPin = settings?.adminPin || '1020';
+    if (pinInput.trim() === String(validPin).trim()) {
+      setIsAdminUnlocked(true);
+      setShowPinPrompt(false);
+      setPinError('');
+      setPinInput('');
+    } else {
+      setPinError(isGu 
+        ? '❌ ખોટો PIN! ફક્ત મંથન કદમ (એડમિન) જ WhatsApp બોટ બદલી શકે છે.' 
+        : '❌ Incorrect PIN! Only Admin can manage WhatsApp Bot.');
+    }
+  };
+
   const handleLogout = async () => {
+    if (!isAdminUnlocked) {
+      setShowPinPrompt(true);
+      return;
+    }
+
     if (!window.confirm(isGu ? 'શું તમે ખરેખર બોટ લિંક રદ કરવા માંગો છો?' : 'Disconnect WhatsApp bot?')) return;
     try {
       await fetch('http://localhost:3001/api/bot/logout', { method: 'POST' });
@@ -66,6 +94,11 @@ export const WhatsAppBotModal = ({
   };
 
   const handleRefreshQr = async () => {
+    if (!isAdminUnlocked) {
+      setShowPinPrompt(true);
+      return;
+    }
+
     setRefreshingQr(true);
     try {
       await fetch('http://localhost:3001/api/bot/refresh-qr', { method: 'POST' });
@@ -80,6 +113,11 @@ export const WhatsAppBotModal = ({
 
   // 100% Background Auto-Send to all pending members
   const handleAutoSendAll = async () => {
+    if (!isAdminUnlocked) {
+      setShowPinPrompt(true);
+      return;
+    }
+
     const pendingMembers = members.filter(m => !m.payments?.[activeMonthObj.id]?.paid);
     if (pendingMembers.length === 0) {
       alert(isGu ? 'આ મહિના માટે કોઈ સભ્યનો ફાળો બાકી નથી!' : 'No pending members for this month!');
@@ -114,7 +152,7 @@ export const WhatsAppBotModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs">
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[94vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-100 w-full max-w-xl overflow-hidden animate-in fade-in zoom-in duration-150 flex flex-col max-h-[94vh] relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -128,12 +166,20 @@ export const WhatsAppBotModal = ({
                 <h3 className="text-base sm:text-lg font-bold">
                   {isGu ? 'ઓટોમેટિક WhatsApp સેન્ડર બોટ' : 'Background WhatsApp Auto-Sender Bot'}
                 </h3>
-                <span className="text-[10px] bg-emerald-400 text-emerald-950 font-extrabold px-2 py-0.5 rounded-full">
-                  100% Hands-Free
-                </span>
+                {isAdminUnlocked ? (
+                  <span className="text-[10px] bg-emerald-300 text-emerald-950 font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>ADMIN</span>
+                  </span>
+                ) : (
+                  <span className="text-[10px] bg-white/20 text-white font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Lock className="w-2.5 h-2.5" />
+                    <span>PROTECTED</span>
+                  </span>
+                )}
               </div>
               <p className="text-emerald-100 text-xs mt-0.5">
-                {isGu ? 'કોઈપણ ક્લિક વગર બધા બાકી સભ્યોને બેકગ્રાઉન્ડમાં સીધા મેસેજ પહોંચશે' : 'Silently dispatches reminders & receipts without manual clicking'}
+                {isGu ? 'સત્તાવાર બોટ • ફક્ત મંથન કદમ જ QR સ્કેન કરી શકે છે' : 'Official WhatsApp Gateway • Admin Protected'}
               </p>
             </div>
           </div>
@@ -146,7 +192,7 @@ export const WhatsAppBotModal = ({
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-5 flex-1">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 flex-1">
           
           {loading ? (
             <div className="py-12 text-center text-slate-500">
@@ -166,7 +212,7 @@ export const WhatsAppBotModal = ({
                   <div>
                     <span className="text-xs font-bold text-emerald-900 block flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span>{isGu ? 'WhatsApp બોટ સક્રિય છે (Active)' : 'WhatsApp Bot is Connected'}</span>
+                      <span>{isGu ? 'મહાદેવ યુવક મંડળ WhatsApp બોટ સક્રિય છે' : 'WhatsApp Bot is Connected'}</span>
                     </span>
                     <span className="text-sm font-extrabold text-emerald-800">
                       +{botStatus.phone || 'Connected'}
@@ -174,14 +220,25 @@ export const WhatsAppBotModal = ({
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 transition font-semibold cursor-pointer flex items-center gap-1"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>{isGu ? 'લિંક રદ કરો' : 'Logout'}</span>
-                </button>
+                {isAdminUnlocked ? (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 transition font-semibold cursor-pointer flex items-center gap-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{isGu ? 'લિંક રદ કરો' : 'Logout'}</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowPinPrompt(true)}
+                    className="text-[11px] text-slate-500 hover:text-slate-800 bg-white px-2.5 py-1 rounded-lg border border-slate-200 transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Lock className="w-3 h-3 text-amber-600" />
+                    <span>{isGu ? 'એડમિન કંટ્રોલ' : 'Admin'}</span>
+                  </button>
+                )}
               </div>
 
               {/* Automatic Cron Scheduler Info */}
@@ -279,9 +336,49 @@ export const WhatsAppBotModal = ({
                 <span>{isGu ? 'ફરી પ્રયાસ કરો (Retry)' : 'Retry Connection'}</span>
               </button>
             </div>
+          ) : !isAdminUnlocked ? (
+            /* QR is locked for regular viewers */
+            <div className="text-center py-8 px-4 space-y-4 max-w-sm mx-auto">
+              <div className="w-16 h-16 rounded-3xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-3xl shadow-xs">
+                🔒
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-base">
+                  {isGu ? 'સુરક્ષિત સત્તાવાર WhatsApp બોટ' : 'Official WhatsApp Gateway'}
+                </h4>
+                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                  {isGu 
+                    ? 'આ WhatsApp બોટ ફક્ત મુખ્ય એડમિન (મંથન કદમ) જ લિંક અથવા સ્કેન કરી શકે છે. જેથી બધા સભ્યોને એક જ સત્તાવાર નંબર પરથી મેસેજ પહોંચે અને કોઈ અન્ય લિંક ન કરી શકે.'
+                    : 'Only Manthan Kadam (Admin) can scan and link this WhatsApp bot.'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowPinPrompt(true)}
+                className="bg-orange-600 hover:bg-orange-700 active:scale-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2 mx-auto cursor-pointer"
+              >
+                <KeyRound className="w-4 h-4" />
+                <span>{isGu ? '🔑 એડમિન QR સ્કેનર ખોલો (PIN દાખલ કરો)' : 'Unlock QR Scanner (Admin PIN)'}</span>
+              </button>
+            </div>
           ) : (
-            /* QR Code Linking State */
+            /* QR Code Linking State (Admin Unlocked Only!) */
             <div className="text-center space-y-4">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-900 flex items-center justify-between">
+                <span className="flex items-center gap-1.5 font-bold">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>{isGu ? '🔓 એડમિન સ્કેનર સક્રિય: તમારું WhatsApp લિંક કરો' : '🔓 Admin scanner active'}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsAdminUnlocked(false)}
+                  className="text-[11px] text-emerald-700 hover:text-emerald-950 underline font-semibold cursor-pointer"
+                >
+                  {isGu ? 'લૉક કરો' : 'Lock'}
+                </button>
+              </div>
+
               <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 max-w-sm mx-auto space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
@@ -346,25 +443,77 @@ export const WhatsAppBotModal = ({
                   <p>3. <strong>"Link a Device"</strong> પર ક્લિક કરી આ QR સ્કેન કરો.</p>
                 </div>
               </div>
-
-              <p className="text-xs text-slate-500">
-                🔒 {isGu ? 'એક વાર સ્કેન કર્યા પછી સિસ્ટમ આપોઆપ દર ૧ તારીખે જાતે જ મેસેજ મોકલી દેશે.' : 'Once connected, reminders and receipts will send automatically.'}
-              </p>
             </div>
           )}
 
         </div>
 
-        {/* Footer */}
-        <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer"
-          >
-            {isGu ? 'બંધ કરો' : 'Close'}
-          </button>
-        </div>
+        {/* PIN Verification Dialog Overlay */}
+        {showPinPrompt && (
+          <div className="absolute inset-0 z-30 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 max-w-sm w-full space-y-4 animate-in fade-in zoom-in duration-150">
+              <div className="text-center space-y-1.5">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+                  <KeyRound className="w-6 h-6" />
+                </div>
+                <h4 className="text-base font-bold text-slate-900">
+                  {isGu ? '🔐 એડમિન વેરિફિકેશન' : '🔐 Admin Verification'}
+                </h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  {isGu 
+                    ? 'WhatsApp બોટ સ્કેનર ફક્ત મંથન કદમ (એડમિન) જ બદલી શકે છે. તમારો સિક્રેટ PIN દાખલ કરો.' 
+                    : 'Only Admin (Manthan Kadam) can link or control this WhatsApp bot.'}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <input
+                  type="password"
+                  maxLength={8}
+                  autoFocus
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    setPinError('');
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleVerifyPin();
+                  }}
+                  placeholder="••••"
+                  className="w-full text-center text-xl tracking-[0.5em] font-mono py-2.5 px-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50 font-bold"
+                />
+                {pinError && (
+                  <p className="text-xs text-rose-600 text-center font-semibold flex items-center justify-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>{pinError}</span>
+                  </p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPinPrompt(false);
+                    setPinInput('');
+                    setPinError('');
+                  }}
+                  className="px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+                >
+                  {isGu ? 'રદ કરો' : 'Cancel'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleVerifyPin}
+                  className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm transition cursor-pointer flex items-center justify-center gap-1"
+                >
+                  <Unlock className="w-3.5 h-3.5" />
+                  <span>{isGu ? 'અનલૉક કરો' : 'Unlock'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

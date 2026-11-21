@@ -19,6 +19,7 @@ export const Header = ({
   lang, 
   setLang, 
   onOpenAddMember, 
+  onOpenSelfJoin,
   onOpenWhatsAppReport, 
   onOpenAutoReminder,
   onOpenBotModal,
@@ -114,6 +115,18 @@ export const Header = ({
               <QrCode className="w-3.5 h-3.5" />
               <span>{isGu ? 'UPI / QR' : 'UPI / QR'}</span>
             </button>
+
+            {/* Self Join Button for any member */}
+            {onOpenSelfJoin && (
+              <button
+                onClick={onOpenSelfJoin}
+                className="bg-amber-300 hover:bg-amber-200 text-amber-950 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer active:scale-95 border border-amber-400"
+                title={isGu ? 'કોઈપણ વ્યક્તિ સભ્ય તરીકે જાતે જોડાઈ શકે છે' : 'Join as a Member'}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-orange-700" />
+                <span>{isGu ? '✨ જાતે જોડાઓ' : 'Join'}</span>
+              </button>
+            )}
 
             {/* Add Member Button */}
             <button
