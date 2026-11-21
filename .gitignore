@@ -19,9 +19,6 @@ whatsapp_auth/*
 .env
 .env.*
 
-# Local data files
-data/database.json
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,0 +1,149 @@
+{
+  "members": [
+    {
+      "id": "m_101",
+      "name": "Manthan kadam",
+      "phone": "9016991020",
+      "role": "મુખ્ય આયોજક (Organiser)",
+      "gender": "male",
+      "monthlyTarget": 300,
+      "joinedDate": "2026-10-01",
+      "payments": {
+        "m1": {
+          "paid": false,
+          "amount": 0
+        },
+        "m2": {
+          "paid": false,
+          "amount": 0
+        }
+      }
+    },
+    {
+      "id": "m_102",
+      "name": "Raj Makwna",
+      "phone": "7046641547",
+      "role": "ખજાનચી (Treasurer)",
+      "gender": "male",
+      "monthlyTarget": 300,
+      "joinedDate": "2026-10-01",
+      "payments": {
+        "m1": {
+          "paid": false,
+          "amount": 0
+        },
+        "m2": {
+          "paid": false,
+          "amount": 0
+        }
+      }
+    }
+  ],
+  "settings": {
+    "mandalName": "શ્રી મહાદેવ યુવક મંડળ",
+    "mandalNameEn": "Shree Mahadev Yuvak Mandal",
+    "year": "2026-2027",
+    "monthlyAmount": 300,
+    "treasurerName": "Raj (ખજાનચી / Treasurer)",
+    "treasurerPhone": "7046641547",
+    "upiId": "rajmakwna4512@okaxis",
+    "upiQrNote": "Mahadev Yuvak Mandal Ganesh Fund",
+    "tagline": "હર હર મહાદેવ 🚩 ગણપતિ બાપ્પા મોરિયા!",
+    "autoOpenWhatsAppReceipt": true,
+    "customQrImage": null,
+    "adminPin": "1020"
+  },
+  "months": [
+    {
+      "id": "m1",
+      "nameEn": "October",
+      "nameGu": "ઓક્ટોબર",
+      "short": "Oct"
+    },
+    {
+      "id": "m2",
+      "nameEn": "November",
+      "nameGu": "નવેમ્બર",
+      "short": "Nov"
+    },
+    {
+      "id": "m3",
+      "nameEn": "December",
+      "nameGu": "ડિસેમ્બર",
+      "short": "Dec"
+    },
+    {
+      "id": "m4",
+      "nameEn": "January",
+      "nameGu": "જાન્યુઆરી",
+      "short": "Jan"
+    },
+    {
+      "id": "m5",
+      "nameEn": "February",
+      "nameGu": "ફેબ્રુઆરી",
+      "short": "Feb"
+    },
+    {
+      "id": "m6",
+      "nameEn": "March",
+      "nameGu": "માર્ચ",
+      "short": "Mar"
+    },
+    {
+      "id": "m7",
+      "nameEn": "April",
+      "nameGu": "એપ્રિલ",
+      "short": "Apr"
+    },
+    {
+      "id": "m8",
+      "nameEn": "May",
+      "nameGu": "મે",
+      "short": "May"
+    },
+    {
+      "id": "m9",
+      "nameEn": "June",
+      "nameGu": "જૂન",
+      "short": "Jun"
+    },
+    {
+      "id": "m10",
+      "nameEn": "July",
+      "nameGu": "જુલાઈ",
+      "short": "Jul"
+    },
+    {
+      "id": "m11",
+      "nameEn": "August",
+      "nameGu": "ઓગસ્ટ",
+      "short": "Aug"
+    },
+    {
+      "id": "m12",
+      "nameEn": "September",
+      "nameGu": "સપ્ટેમ્બર",
+      "short": "Sep"
+    }
+  ],
+  "expenses": [
+    {
+      "id": "exp_1",
+      "title": "ગણેશજી મૂર્તિ એડવાન્સ બુકિંગ",
+      "amount": 1500,
+      "category": "મૂર્તિ (Idol)",
+      "date": "2026-10-15",
+      "paidBy": "રાજ મકવાણા (ખજાનચી)"
+    },
+    {
+      "id": "exp_2",
+      "title": "સાઉન્ડ સિસ્ટમ એડવાન્સ",
+      "amount": 1000,
+      "category": "સાઉન્ડ / લાઈટ",
+      "date": "2026-11-05",
+      "paidBy": "મંથન કદમ"
+    }
+  ],
+  "activeMonth": "m2"
+}
