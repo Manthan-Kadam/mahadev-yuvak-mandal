@@ -762,6 +762,28 @@ export const UpiSettingsModal = ({
               </div>
             </div>
 
+            {/* Cloud Backend Server URL */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                {isGu ? '🌐 ક્લાઉડ સર્વર લિંક (Cloud Backend URL - Real-time Sync)' : '🌐 Cloud Backend URL'}
+              </label>
+              <input
+                type="url"
+                value={formData.cloudUrl || ''}
+                onChange={(e) => {
+                  setFormData({ ...formData, cloudUrl: e.target.value });
+                  localStorage.setItem('ganpati_mandal_cloud_url', e.target.value.trim());
+                }}
+                placeholder="https://mahadev-yuvak-mandal.onrender.com"
+                className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              <p className="text-[11px] text-slate-500 leading-tight">
+                {isGu 
+                  ? '💡 જ્યારે આ સાઇટ Vercel પર હોય ત્યારે બધા ફોનમાં એકસરખો લાઈવ ડેટા રાખવા માટે Render સર્વર URL અહીં ઉમેરી શકાય છે.' 
+                  : '💡 Enter Render backend URL to keep Vercel frontend in sync across all devices globally.'}
+              </p>
+            </div>
+
             {/* Tagline */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">

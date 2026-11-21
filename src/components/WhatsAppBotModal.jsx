@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../utils/api';
 import { 
   X, 
   Bot, 
@@ -43,7 +44,7 @@ export const WhatsAppBotModal = ({
   // Poll status while modal is open
   const fetchStatus = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/bot/status');
+      const res = await fetch(getApiUrl('/api/bot/status'));
       if (res.ok) {
         const data = await res.json();
         setBotStatus(data);
@@ -86,7 +87,7 @@ export const WhatsAppBotModal = ({
 
     if (!window.confirm(isGu ? 'શું તમે ખરેખર બોટ લિંક રદ કરવા માંગો છો?' : 'Disconnect WhatsApp bot?')) return;
     try {
-      await fetch('http://localhost:3001/api/bot/logout', { method: 'POST' });
+      await fetch(getApiUrl('/api/bot/logout'), { method: 'POST' });
       fetchStatus();
     } catch (e) {
       console.error(e);
@@ -101,7 +102,7 @@ export const WhatsAppBotModal = ({
 
     setRefreshingQr(true);
     try {
-      await fetch('http://localhost:3001/api/bot/refresh-qr', { method: 'POST' });
+      await fetch(getApiUrl('/api/bot/refresh-qr'), { method: 'POST' });
       await new Promise(r => setTimeout(r, 1500));
       await fetchStatus();
     } catch (e) {
@@ -128,7 +129,7 @@ export const WhatsAppBotModal = ({
     setDispatchResults(null);
 
     try {
-      const res = await fetch('http://localhost:3001/api/bot/send-reminders', {
+      const res = await fetch(getApiUrl('/api/bot/send-reminders'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

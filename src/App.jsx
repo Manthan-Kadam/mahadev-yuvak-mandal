@@ -19,6 +19,7 @@ import {
   exportToJsonFile, 
   exportToCsv 
 } from './utils/storage';
+import { getApiUrl } from './utils/api';
 import { INITIAL_MEMBERS, INITIAL_EXPENSES, INITIAL_SETTINGS, DEFAULT_MONTHS } from './data/initialData';
 
 export function App() {
@@ -56,7 +57,7 @@ export function App() {
     let isMounted = true;
     const fetchServerData = async () => {
       try {
-        const res = await fetch('/api/data');
+        const res = await fetch(getApiUrl('/api/data'));
         if (res.ok) {
           const data = await res.json();
           if (isMounted && data) {
@@ -105,7 +106,7 @@ export function App() {
   // Sync state to backend database so cron job can access it even when browser is closed (debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch('http://localhost:3001/api/sync-data', {
+      fetch(getApiUrl('/api/sync-data'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ members, settings, months, expenses, activeMonth })
@@ -170,7 +171,7 @@ export function App() {
     setMembers(prev => [...prev, newMember]);
 
     try {
-      const res = await fetch('/api/members/join', {
+      const res = await fetch(getApiUrl('/api/members/join'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(memberData)

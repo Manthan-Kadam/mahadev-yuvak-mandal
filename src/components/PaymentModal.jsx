@@ -14,6 +14,7 @@ import {
   Square
 } from 'lucide-react';
 import { createPaymentReceiptUrl, createMultiMonthReceiptUrl } from '../utils/whatsapp';
+import { getApiUrl } from '../utils/api';
 import confetti from 'canvas-confetti';
 
 export const PaymentModal = ({ 
@@ -146,7 +147,7 @@ export const PaymentModal = ({
       const receiptUrl = createPaymentReceiptUrl(receiptMember, month, paymentData, settings);
 
       // Attempt silent background send via bot first
-      fetch('http://localhost:3001/api/bot/send-receipt', {
+      fetch(getApiUrl('/api/bot/send-receipt'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -209,7 +210,7 @@ export const PaymentModal = ({
       );
 
       // Attempt silent background send via bot first
-      fetch('http://localhost:3001/api/bot/send-multi-receipt', {
+      fetch(getApiUrl('/api/bot/send-multi-receipt'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
