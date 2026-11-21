@@ -32,13 +32,23 @@ export const loadStoredData = () => {
       if (settings.autoOpenWhatsAppReceipt === undefined) {
         settings.autoOpenWhatsAppReceipt = true;
       }
+      if (!settings.upiId || settings.upiId === 'mahadev.mandal@upi') {
+        settings.upiId = 'rajmakwna4512@okaxis';
+      }
+      if (!settings.treasurerPhone || settings.treasurerPhone === '9876543210') {
+        settings.treasurerPhone = '7046641547';
+        settings.treasurerName = 'રાજ મકવાણા (ખજાનચી / Treasurer)';
+      }
+      if (!settings.adminPin) {
+        settings.adminPin = '1020';
+      }
     }
 
-    // Clean out dummy members if they are still from initial demo
-    let members = storedMembers ? JSON.parse(storedMembers) : [];
-    if (members.length > 0 && (members[0]?.id === 'mem_1' || members[0]?.name === 'રમેશભાઈ પટેલ')) {
-      members = [];
+    let parsedMembers = storedMembers ? JSON.parse(storedMembers) : [];
+    if (parsedMembers.length > 0 && (parsedMembers[0]?.id === 'mem_1' || parsedMembers[0]?.name === 'રમેશભાઈ પટેલ')) {
+      parsedMembers = [];
     }
+    let members = (parsedMembers && parsedMembers.length > 0) ? parsedMembers : INITIAL_MEMBERS;
 
     return {
       members: members,

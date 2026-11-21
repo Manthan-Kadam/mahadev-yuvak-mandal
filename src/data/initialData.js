@@ -20,16 +20,125 @@ export const INITIAL_SETTINGS = {
   mandalNameEn: 'Shree Mahadev Yuvak Mandal',
   year: '2026-2027',
   monthlyAmount: 300, // Decided monthly amount: ₹300 (Can be changed anytime)
-  treasurerName: 'મંથનભાઈ (ખજાનચી / Treasurer)',
-  treasurerPhone: '9876543210',
-  upiId: 'mahadev.mandal@upi',
+  treasurerName: 'રાજ મકવાણા (ખજાનચી / Treasurer)',
+  treasurerPhone: '7046641547',
+  upiId: 'rajmakwna4512@okaxis',
   upiQrNote: 'Mahadev Yuvak Mandal Ganesh Fund',
   tagline: 'હર હર મહાદેવ 🚩 ગણપતિ બાપ્પા મોરિયા!',
   autoOpenWhatsAppReceipt: true, // Automatically launch WhatsApp with digital receipt on payment
-  customQrImage: null // User's own uploaded QR code image (Base64)
+  customQrImage: null, // User's own uploaded QR code image (Base64)
+  adminPin: '1020' // Secret PIN for Manthan Kadam (Admin) to protect QR & settings from being changed by others
 };
 
-// No inbuilt members - clean slate for user's actual group members
-export const INITIAL_MEMBERS = [];
+export const INITIAL_MEMBERS = [
+  {
+    id: 'm_101',
+    name: 'મંથન કદમ',
+    phone: '9016991020',
+    role: 'મુખ્ય આયોજક (Organiser)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-05', method: 'UPI' },
+      m2: { paid: true, amount: 300, date: '2026-11-02', method: 'UPI' }
+    }
+  },
+  {
+    id: 'm_102',
+    name: 'રાજ મકવાણા',
+    phone: '7046641547',
+    role: 'ખજાનચી (Treasurer)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-05', method: 'UPI' },
+      m2: { paid: true, amount: 300, date: '2026-11-04', method: 'રોકડ (Cash)' }
+    }
+  },
+  {
+    id: 'm_103',
+    name: 'હિતેશભાઈ પરમાર',
+    phone: '9825100001',
+    role: 'સભ્ય (Member)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-06', method: 'UPI' },
+      m2: { paid: true, amount: 300, date: '2026-11-05', method: 'UPI' }
+    }
+  },
+  {
+    id: 'm_104',
+    name: 'ભાવેશભાઈ ચૌહાણ',
+    phone: '9825100002',
+    role: 'સભ્ય (Member)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-08', method: 'રોકડ (Cash)' },
+      m2: { paid: false }
+    }
+  },
+  {
+    id: 'm_105',
+    name: 'પૂજાબેન સોલંકી',
+    phone: '9825100003',
+    role: 'સભ્ય (Member)',
+    gender: 'female',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-07', method: 'UPI' },
+      m2: { paid: true, amount: 300, date: '2026-11-06', method: 'UPI' }
+    }
+  },
+  {
+    id: 'm_106',
+    name: 'અલ્પેશભાઈ વાઘેલા',
+    phone: '9825100004',
+    role: 'સભ્ય (Member)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-09', method: 'UPI' },
+      m2: { paid: false }
+    }
+  },
+  {
+    id: 'm_107',
+    name: 'સંજયભાઈ રાઠોડ',
+    phone: '9825100005',
+    role: 'સભ્ય (Member)',
+    gender: 'male',
+    monthlyTarget: 300,
+    joinedDate: '2026-10-01',
+    payments: {
+      m1: { paid: true, amount: 300, date: '2026-10-10', method: 'રોકડ (Cash)' },
+      m2: { paid: true, amount: 300, date: '2026-11-08', method: 'UPI' }
+    }
+  }
+];
 
-export const INITIAL_EXPENSES = [];
+export const INITIAL_EXPENSES = [
+  {
+    id: 'exp_1',
+    title: 'ગણેશજી મૂર્તિ એડવાન્સ બુકિંગ',
+    amount: 1500,
+    category: 'મૂર્તિ (Idol)',
+    date: '2026-10-15',
+    paidBy: 'રાજ મકવાણા (ખજાનચી)'
+  },
+  {
+    id: 'exp_2',
+    title: 'સાઉન્ડ સિસ્ટમ એડવાન્સ',
+    amount: 1000,
+    category: 'સાઉન્ડ / લાઈટ',
+    date: '2026-11-05',
+    paidBy: 'મંથન કદમ'
+  }
+];

@@ -23,8 +23,12 @@ import { INITIAL_MEMBERS, INITIAL_EXPENSES, INITIAL_SETTINGS, DEFAULT_MONTHS } f
 export function App() {
   const [initial] = useState(() => loadStoredData());
 
-  const [members, setMembers] = useState(initial.members);
-  const [expenses, setExpenses] = useState(initial.expenses);
+  const [members, setMembers] = useState(() => {
+    return (initial.members && initial.members.length > 0) ? initial.members : INITIAL_MEMBERS;
+  });
+  const [expenses, setExpenses] = useState(() => {
+    return (initial.expenses && initial.expenses.length > 0) ? initial.expenses : INITIAL_EXPENSES;
+  });
   const [settings, setSettings] = useState(initial.settings);
   const [months, setMonths] = useState(initial.months);
   const [lang, setLang] = useState(initial.lang || 'gu');
@@ -124,11 +128,18 @@ export function App() {
   };
 
   const handleClearMembers = () => {
-    const confirmMsg = isGu 
-      ? 'શું તમે ખરેખર હાલના તમામ સભ્યો હટાવીને તમારા મહાદેવ યુવક મંડળના નવા સભ્યો ઉમેરવા માંગો છો?' 
-      : 'Clear all members from the list?';
-    if (window.confirm(confirmMsg)) {
-      setMembers([]);
+    const enteredPin = prompt(isGu 
+      ? 'સભ્યોની યાદી સાફ કરવા માટે એડમિન PIN દાખલ કરો (મંથન કદમ):' 
+      : 'Enter Admin PIN to clear list:');
+    if (enteredPin === (settings.adminPin || '1020')) {
+      const confirmMsg = isGu 
+        ? 'શું તમે ખરેખર હાલના તમામ સભ્યો હટાવીને તમારા મહાદેવ યુવક મંડળના નવા સભ્યો ઉમેરવા માંગો છો?' 
+        : 'Clear all members from the list?';
+      if (window.confirm(confirmMsg)) {
+        setMembers([]);
+      }
+    } else if (enteredPin !== null) {
+      alert(isGu ? 'ખોટો PIN! ફક્ત એડમિન જ યાદી સાફ કરી શકે છે.' : 'Incorrect PIN! Only Admin can clear the list.');
     }
   };
 
