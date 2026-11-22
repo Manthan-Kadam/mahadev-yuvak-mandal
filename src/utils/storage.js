@@ -2,6 +2,7 @@ import { INITIAL_MEMBERS, INITIAL_EXPENSES, INITIAL_SETTINGS, DEFAULT_MONTHS } f
 
 const STORAGE_KEYS = {
   MEMBERS: 'ganpati_mandal_members_v1',
+  ARCHIVED_MEMBERS: 'ganpati_mandal_archived_members_v1',
   EXPENSES: 'ganpati_mandal_expenses_v1',
   SETTINGS: 'ganpati_mandal_settings_v1',
   MONTHS: 'ganpati_mandal_months_v1',
@@ -11,6 +12,7 @@ const STORAGE_KEYS = {
 export const loadStoredData = () => {
   try {
     const storedMembers = localStorage.getItem(STORAGE_KEYS.MEMBERS);
+    const storedArchived = localStorage.getItem(STORAGE_KEYS.ARCHIVED_MEMBERS);
     const storedExpenses = localStorage.getItem(STORAGE_KEYS.EXPENSES);
     const storedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     const storedMonths = localStorage.getItem(STORAGE_KEYS.MONTHS);
@@ -52,6 +54,7 @@ export const loadStoredData = () => {
 
     return {
       members: members,
+      archivedMembers: storedArchived ? JSON.parse(storedArchived) : [],
       expenses: storedExpenses ? JSON.parse(storedExpenses) : INITIAL_EXPENSES,
       settings: settings,
       months: storedMonths ? JSON.parse(storedMonths) : DEFAULT_MONTHS,
@@ -61,6 +64,7 @@ export const loadStoredData = () => {
     console.error('Error loading data from localStorage:', err);
     return {
       members: INITIAL_MEMBERS,
+      archivedMembers: [],
       expenses: INITIAL_EXPENSES,
       settings: INITIAL_SETTINGS,
       months: DEFAULT_MONTHS,

@@ -13,6 +13,7 @@ import { MonthlyReminderBanner } from './components/MonthlyReminderBanner';
 import { AutoReminderQueueModal } from './components/AutoReminderQueueModal';
 import { WhatsAppBotModal } from './components/WhatsAppBotModal';
 import { SelfJoinModal } from './components/SelfJoinModal';
+import { ArchivedMembersModal } from './components/ArchivedMembersModal';
 import { 
   loadStoredData, 
   saveToStorage, 
@@ -27,6 +28,9 @@ export function App() {
 
   const [members, setMembers] = useState(() => {
     return (initial.members && initial.members.length > 0) ? initial.members : INITIAL_MEMBERS;
+  });
+  const [archivedMembers, setArchivedMembers] = useState(() => {
+    return (initial.archivedMembers && Array.isArray(initial.archivedMembers)) ? initial.archivedMembers : [];
   });
   const [expenses, setExpenses] = useState(() => {
     return (initial.expenses && initial.expenses.length > 0) ? initial.expenses : INITIAL_EXPENSES;
@@ -51,6 +55,7 @@ export function App() {
   const [isAutoReminderOpen, setIsAutoReminderOpen] = useState(false);
   const [isBotModalOpen, setIsBotModalOpen] = useState(false);
   const [isSelfJoinOpen, setIsSelfJoinOpen] = useState(false);
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
 
   // Auto-sync with backend so all devices & users see the exact same real-time members
   useEffect(() => {
@@ -63,6 +68,9 @@ export function App() {
           if (isMounted && data) {
             if (data.members && Array.isArray(data.members) && data.members.length > 0) {
               setMembers(data.members);
+            }
+            if (data.archivedMembers && Array.isArray(data.archivedMembers)) {
+              setArchivedMembers(data.archivedMembers);
             }
             if (data.settings && Object.keys(data.settings).length > 0) {
               setSettings(prev => ({ ...prev, ...data.settings }));
@@ -88,6 +96,10 @@ export function App() {
   }, [members]);
 
   useEffect(() => {
+    saveToStorage('ARCHIVED_MEMBERS', archivedMembers);
+  }, [archivedMembers]);
+
+  useEffect(() => {
     saveToStorage('EXPENSES', expenses);
   }, [expenses]);
 
@@ -109,12 +121,12 @@ export function App() {
       fetch(getApiUrl('/api/sync-data'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ members, settings, months, expenses, activeMonth })
+        body: JSON.stringify({ members, archivedMembers, settings, months, expenses, activeMonth })
       }).catch(() => {});
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [members, settings, months, expenses, activeMonth]);
+  }, [members, archivedMembers, settings, months, expenses, activeMonth]);
 
   const isGu = lang === 'gu';
 
@@ -190,15 +202,42 @@ export function App() {
     }
   };
 
+  const computeMemberTotalPaid = (member) => {
+    if (!member || !member.payments) return 0;
+    let total = 0;
+    const target = member.monthlyTarget || settings.monthlyAmount || 500;
+    months.forEach(month => {
+      const p = member.payments[month.id];
+      if (p && p.paid) {
+        total += (Number(p.amount) || target);
+      }
+    });
+    return total;
+  };
+
   const handleClearMembers = () => {
     const enteredPin = prompt(isGu 
       ? 'સભ્યોની યાદી સાફ કરવા માટે એડમિન PIN દાખલ કરો (મંથન કદમ):' 
       : 'Enter Admin PIN to clear list:');
     if (enteredPin === (settings.adminPin || '1020')) {
       const confirmMsg = isGu 
-        ? 'શું તમે ખરેખર હાલના તમામ સભ્યો હટાવીને તમારા મહાદેવ યુવક મંડળના નવા સભ્યો ઉમેરવા માંગો છો?' 
-        : 'Clear all members from the list?';
+        ? 'શું તમે ખરેખર હાલના તમામ સભ્યો હટાવીને તમારા મહાદેવ યુવક મંડળના નવા સભ્યો ઉમેરવા માંગો છો?\n(જે સભ્યોએ ફાળો ચૂકવ્યો હશે તેમનો તમામ હિસાબ સુરક્ષિત આર્કાઇવમાં સચવાઈ જશે)' 
+        : 'Clear all members from the list? (Members with paid fund records will be safely archived)';
       if (window.confirm(confirmMsg)) {
+        const toArchive = [];
+        members.forEach(m => {
+          const totalPaid = computeMemberTotalPaid(m);
+          if (totalPaid > 0) {
+            toArchive.push({
+              ...m,
+              archivedAt: new Date().toISOString(),
+              totalPaidAtArchive: totalPaid
+            });
+          }
+        });
+        if (toArchive.length > 0) {
+          setArchivedMembers(prev => [...toArchive, ...prev.filter(a => !toArchive.some(t => t.id === a.id))]);
+        }
         setMembers([]);
       }
     } else if (enteredPin !== null) {
@@ -207,12 +246,50 @@ export function App() {
   };
 
   const handleDeleteMember = (id, name) => {
-    const confirmMsg = isGu 
-      ? `શું તમે ખરેખર ${name} ને સભ્યોની યાદીમાંથી કાઢી નાખવા માંગો છો?`
-      : `Are you sure you want to delete ${name}?`;
-    if (window.confirm(confirmMsg)) {
-      setMembers(prev => prev.filter(m => m.id !== id));
+    const memberToDelete = members.find(m => m.id === id);
+    if (!memberToDelete) return;
+
+    const totalPaid = computeMemberTotalPaid(memberToDelete);
+
+    if (totalPaid > 0) {
+      // Member has paid funds -> ARCHIVE their data so records and audit are preserved
+      const confirmMsg = isGu 
+        ? `⚠️ ${name} દ્વારા અત્યાર સુધી કુલ ₹${totalPaid} નો ફાળો જમા થયેલ છે!\n\nશું તમે આ સભ્યને સક્રિય યાદીમાંથી હટાવવા માંગો છો?\n(નોંધ: એમનો ₹${totalPaid} નો તમામ હિસાબ 'આર્કાઇવ' માં સુરક્ષિત રહેશે અને જરૂર પડે ગમે ત્યારે રિસ્ટોર કરી શકાશે.)`
+        : `⚠️ ${name} has paid a total of ₹${totalPaid}!\n\nAre you sure you want to remove them?\n(Their financial history of ₹${totalPaid} will be safely archived and can be restored anytime.)`;
+      
+      if (window.confirm(confirmMsg)) {
+        const archivedRecord = {
+          ...memberToDelete,
+          archivedAt: new Date().toISOString(),
+          totalPaidAtArchive: totalPaid
+        };
+        setArchivedMembers(prev => [archivedRecord, ...prev.filter(a => a.id !== id)]);
+        setMembers(prev => prev.filter(m => m.id !== id));
+      }
+    } else {
+      // Member has empty/0 fund -> DO NOT store in archive, remove completely!
+      const confirmMsg = isGu 
+        ? `શું તમે ખરેખર ${name} ને સભ્યોની યાદીમાંથી કાઢી નાખવા માંગો છો?\n(આ સભ્ય દ્વારા કોઈપણ ફાળો (₹0) જમા થયેલ નથી, તેથી એમનો ડેટા સંગ્રહ કર્યા વિના કાયમ માટે હટાવી દેવામાં આવશે.)`
+        : `Are you sure you want to delete ${name}?\n(No funds were paid (₹0), so this member will be permanently deleted without archiving.)`;
+      
+      if (window.confirm(confirmMsg)) {
+        setMembers(prev => prev.filter(m => m.id !== id));
+      }
     }
+  };
+
+  const handleRestoreArchivedMember = (archivedMember) => {
+    const { archivedAt, totalPaidAtArchive, ...restoredMember } = archivedMember;
+    setMembers(prev => [...prev.filter(m => m.id !== restoredMember.id), restoredMember]);
+    setArchivedMembers(prev => prev.filter(a => a.id !== archivedMember.id));
+    alert(isGu 
+      ? `✅ ${restoredMember.name} ને સફળતાપૂર્વક સભ્યોની મુખ્ય યાદીમાં પુનઃસ્થાપિત (Restore) કરવામાં આવ્યા!` 
+      : `✅ ${restoredMember.name} has been restored to the main members list!`
+    );
+  };
+
+  const handlePermanentlyDeleteArchivedMember = (memberId) => {
+    setArchivedMembers(prev => prev.filter(a => a.id !== memberId));
   };
 
   const handleOpenEditMember = (member) => {
@@ -393,6 +470,7 @@ export function App() {
         {activeTab === 'matrix' && (
           <MembersMatrix
             members={members}
+            archivedMembers={archivedMembers}
             months={months}
             settings={settings}
             activeMonth={activeMonth}
@@ -402,6 +480,7 @@ export function App() {
             onDeleteMember={handleDeleteMember}
             onOpenAddMember={handleOpenAddMember}
             onOpenSelfJoin={() => setIsSelfJoinOpen(true)}
+            onOpenArchive={() => setIsArchiveOpen(true)}
             onClearMembers={handleClearMembers}
           />
         )}
@@ -608,6 +687,17 @@ export function App() {
         onClose={() => setIsSelfJoinOpen(false)}
         onRegisterMember={handleSelfJoinMember}
         defaultMonthlyAmount={settings.monthlyAmount || 300}
+        settings={settings}
+        lang={lang}
+      />
+
+      <ArchivedMembersModal
+        isOpen={isArchiveOpen}
+        onClose={() => setIsArchiveOpen(false)}
+        archivedMembers={archivedMembers}
+        onRestoreMember={handleRestoreArchivedMember}
+        onPermanentlyDeleteMember={handlePermanentlyDeleteArchivedMember}
+        months={months}
         settings={settings}
         lang={lang}
       />

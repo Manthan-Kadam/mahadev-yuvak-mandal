@@ -441,9 +441,10 @@ app.get('/api/data', (req, res) => {
     if (fs.existsSync(DB_FILE)) {
       const content = fs.readFileSync(DB_FILE, 'utf-8');
       const data = JSON.parse(content);
+      if (!data.archivedMembers) data.archivedMembers = [];
       return res.json(data);
     }
-    res.json({ members: [], settings: {}, months: [], expenses: [] });
+    res.json({ members: [], archivedMembers: [], settings: {}, months: [], expenses: [] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -519,7 +520,59 @@ app.post('/api/members/join', async (req, res) => {
   }
 });
 
-// 8. Sync Portal Database from frontend
+// 8. Delete Member endpoint (Smart Archive: preserves if funds > 0, discards if 0)
+app.delete('/api/members/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!fs.existsSync(DB_FILE)) {
+      return res.status(404).json({ error: 'Database file not found' });
+    }
+    const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+    if (!data.archivedMembers) data.archivedMembers = [];
+
+    const memberIndex = (data.members || []).findIndex(m => m.id === id);
+    if (memberIndex === -1) {
+      return res.status(404).json({ error: 'Member not found' });
+    }
+
+    const member = data.members[memberIndex];
+    let totalPaid = 0;
+    if (member.payments) {
+      Object.values(member.payments).forEach(p => {
+        if (p && p.paid) {
+          const amt = Number(p.amount) || member.monthlyTarget || 300;
+          if (amt > 0) totalPaid += amt;
+        }
+      });
+    }
+
+    let archived = false;
+    if (totalPaid > 0) {
+      const archivedRecord = {
+        ...member,
+        archivedAt: new Date().toISOString(),
+        totalPaidAtArchive: totalPaid
+      };
+      data.archivedMembers = [archivedRecord, ...data.archivedMembers.filter(a => a.id !== id)];
+      archived = true;
+    }
+
+    data.members.splice(memberIndex, 1);
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+
+    res.json({
+      success: true,
+      archived,
+      totalPaid,
+      members: data.members,
+      archivedMembers: data.archivedMembers
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 9. Sync Portal Database from frontend
 app.post('/api/sync-data', (req, res) => {
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(req.body, null, 2), 'utf-8');

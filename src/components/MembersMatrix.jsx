@@ -15,12 +15,14 @@ import {
   UserPlus,
   ListPlus,
   Layers,
-  Sparkles
+  Sparkles,
+  Archive
 } from 'lucide-react';
 import { createPersonalReminderUrl, getMemberGreeting } from '../utils/whatsapp';
 
 export const MembersMatrix = ({ 
   members, 
+  archivedMembers = [],
   months, 
   settings, 
   activeMonth, 
@@ -30,6 +32,7 @@ export const MembersMatrix = ({
   onDeleteMember,
   onOpenAddMember,
   onOpenSelfJoin,
+  onOpenArchive,
   onClearMembers,
   onOpenReceiptModal
 }) => {
@@ -144,6 +147,23 @@ export const MembersMatrix = ({
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>{isGu ? '+ સભ્ય ઉમેરો' : '+ Add Member'}</span>
+            </button>
+          )}
+
+          {/* Archived Members Button */}
+          {onOpenArchive && (
+            <button
+              onClick={onOpenArchive}
+              title={isGu ? 'ડિલીટ થયેલ સભ્યોનો સુરક્ષિત હિસાબ જુઓ' : 'View Archived Members with paid records'}
+              className="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 cursor-pointer no-print shadow-2xs"
+            >
+              <Archive className="w-3.5 h-3.5 text-amber-700" />
+              <span>{isGu ? 'આર્કાઇવ' : 'Archive'}</span>
+              {archivedMembers.length > 0 && (
+                <span className="bg-amber-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+                  {archivedMembers.length}
+                </span>
+              )}
             </button>
           )}
 

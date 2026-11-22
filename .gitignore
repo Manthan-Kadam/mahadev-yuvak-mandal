@@ -18,6 +18,7 @@ whatsapp_auth/*
 *.json-journal
 .env
 .env.*
+screenshot.png
 
 # Editor directories and files
 .vscode/*
