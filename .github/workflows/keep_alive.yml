@@ -1,0 +1,17 @@
+name: Keep Render Server Awake 24/7
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render free instance from spinning down
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Render Cloud Instance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Keep-Alive URL
+        run: |
+          echo "Pinging Render to keep instance awake..."
+          curl -s -f -m 30 "https://mahadev-yuvak-mandal.onrender.com/api/ping" || echo "Ping request sent"

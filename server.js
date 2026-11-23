@@ -21,6 +21,15 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// Health / Keep-Alive Ping endpoint for 24/7 uptime monitoring
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'active', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 // Directories
 const AUTH_DIR = path.join(__dirname, 'whatsapp_auth');
 const DATA_DIR = path.join(__dirname, 'data');
